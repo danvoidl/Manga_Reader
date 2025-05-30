@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Compiled JavaScript files
+dist/
+
+# Logs
+logs/
+*.log
