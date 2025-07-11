@@ -1,9 +1,9 @@
-export const typeDefs = `#graphql 
+export const mangaTypeDefs = `#graphql 
   type Manga {
     id: ID!
     type: String
     attributes: MangaAttributes
-    relationships: [Relationship!]!
+    relationships: [MangaRelationship!]!
   }
 
   type MangaAttributes {
@@ -56,7 +56,7 @@ export const typeDefs = `#graphql
     id: ID!
     type: String
     attributes: TagAttributes
-    relationships: [Relationship]
+    relationships: [MangaRelationship]
   }
 
   type TagAttributes {
@@ -66,14 +66,14 @@ export const typeDefs = `#graphql
     version: Int
   }
 
-  type Relationship {
+  type MangaRelationship {
     id: ID!
     type: String
     related: String
-    attributes: RelationshipAttributes
+    attributes: MangaRelationshipAttributes
   }
 
-  type RelationshipAttributes {
+  type MangaRelationshipAttributes {
     description: String
     volume: String
     fileName: String
@@ -85,5 +85,6 @@ export const typeDefs = `#graphql
 
   type Query {
     mangas: [Manga!]!
+    mangasByName(mangaName: String, limit: Int): [Manga!]!
   }
 `

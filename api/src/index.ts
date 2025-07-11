@@ -1,11 +1,9 @@
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
-import { typeDefs } from './schemas/mangas/schema'
-import { resolvers } from './schemas/mangas/resolvers'
+import { schema } from './schemas'
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers
+  schema
 })
 
 const { url } = await startStandaloneServer(server, {
