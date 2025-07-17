@@ -10,7 +10,7 @@ interface AppTextProps {
 
 const sizeClasses: Record<Sizes, string> = {
   title: "text-white font-semibold text-3xl",
-  subtitle: "text-white font-semibold text-lg",
+  subtitle: "text-white font-semibold text-2xl",
   text: "text-white text-base",
   sub: "text-white text-sm",
 };

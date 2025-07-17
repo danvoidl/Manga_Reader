@@ -13,8 +13,6 @@ export const mangaResolvers = {
 
       if (error) return []
 
-      console.log('MANGA RESOLVER', error, resp.data[0].attributes)
-
       return resp.data
     },
     mangasByName: async (parent: unknown, args: MangaArgs) => {
@@ -24,8 +22,6 @@ export const mangaResolvers = {
       )
 
       if (error) return []
-
-      console.log('MANGA BY NAME RESOLVER', error, resp.data[0].attributes)
 
       return resp.data
     }

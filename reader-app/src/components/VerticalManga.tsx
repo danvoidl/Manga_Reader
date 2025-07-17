@@ -31,8 +31,9 @@ const style = StyleSheet.create({
     height: 240,
   },
   mangaCover: {
-    height: 192,
-    width: 148,
+    height: undefined,
+    width: '100%',
     borderRadius: 6,
+    aspectRatio: 200 / 294
   },
 });

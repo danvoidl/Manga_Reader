@@ -1,38 +1,90 @@
 import AppText from "@/components/AppText";
 import Board from "@/components/Board";
-import Banner from "@/components/Banner";
 import LatestUpdate from "@/components/LatestUpdate";
 import VerticalManga from "@/components/VerticalManga";
-import { mangaCovers } from "@/seed/mangas";
-import { View, ScrollView } from "react-native";
+import { mangaCovers, mangaCovers2, mangaCovers3, mangaCovers4 } from "@/seed/mangas";
+import { View, ScrollView, FlatList, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function IndexScreen() {
   return (
-    <ScrollView className=" flex-1  pb-60 bg-default-black">
-      <View>
-        <Board />
-      </View>
-
-      <View className="mb-14 px-6 pt-2">
-        <View className="mt-6">
-          <AppText text="Latest Updates" size="title" />
-          {[...Array(4)].map((_, i) => (
-            <LatestUpdate key={i} />
-          ))}
+    <SafeAreaView
+      className="flex-1 bg-default-black"
+      edges={["left", "right", "bottom"]}
+    >
+      <ScrollView className="flex-1">
+        <View className="mb-6 h-[60vh] relative">
+          <Board />
         </View>
 
-        <View className="mt-6">
-          <AppText text="Highest Ranking" size="title" className="mb-4" />
+        <View className="mb-14 ">
+          <View className="mt-6">
+            <AppText
+              text="Latest Updates"
+              size="subtitle"
+              className="mb-4 ml-6"
+            />
+            <FlatList
+              data={mangaCovers4.slice(0, 8)}
+              ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
+              contentContainerStyle={{ paddingLeft: 22, paddingRight: 22 }}
+              renderItem={({ item }) => (
+                <VerticalManga coverUrl={item.cover} mangaName={item.name} />
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {mangaCovers.slice(0, 8).map((manga) => (
-              <View style={{ marginRight: 30 }} key={manga.cover}>
-                <VerticalManga coverUrl={manga.cover} mangaName={manga.name} />
-              </View>
-            ))}
-          </ScrollView>
+          <View className="mt-6 ">
+            <AppText
+              text="Recently Added"
+              size="subtitle"
+              className="mb-4 ml-6"
+            />
+            <FlatList
+              data={mangaCovers2.slice(0, 8)}
+              contentContainerStyle={{ paddingLeft: 22, paddingRight: 22 }}
+              ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
+              renderItem={({ item, index }) => (
+                <VerticalManga coverUrl={item.cover} mangaName={item.name} />
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+
+          <View className="mt-6">
+            <AppText
+              text="Highest Ranking"
+              size="subtitle"
+              className="mb-4 ml-6"
+            />
+            <FlatList
+              data={mangaCovers3.slice(0, 8)}
+              ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
+              contentContainerStyle={{ paddingLeft: 22, paddingRight: 22 }}
+              renderItem={({ item }) => (
+                <VerticalManga coverUrl={item.cover} mangaName={item.name} />
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  gradient: {
+    position: "absolute",
+    zIndex: 0,
+    left: 0,
+    right: 0,
+    bottom: -170,
+    height: 180,
+  },
+});

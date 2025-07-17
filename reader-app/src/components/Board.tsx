@@ -22,7 +22,7 @@ export default function Board() {
           data={mangaCovers.slice(0, 8)}
           renderItem={({ item }) => <Banner item={item} />}
           horizontal
-          showsHorizontalScrollIndicator
+          showsHorizontalScrollIndicator={false}
           pagingEnabled
           keyExtractor={(item) => item.id}
           onScroll={Animated.event(

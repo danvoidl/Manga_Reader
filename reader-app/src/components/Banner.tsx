@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
 import { Image } from "expo-image";
 import { blurhash } from "@/constants/general";
 import { LinearGradient } from "expo-linear-gradient";
+import AppText from "./AppText";
 
 interface Manga {
   id: string;
@@ -24,14 +25,16 @@ export default function Banner({ item }: { item: Manga }) {
         contentPosition={"top center"}
       />
       <LinearGradient
-        colors={["transparent", "rgba(0,0,0,1)"]}
+        colors={["transparent", "rgba(38,38,38,1)", "rgba(38,38,38,1)"]}
         style={style.background}
+        locations={[0, 0.7, 1]}
       />
-      <View className="absolute bottom-0 p-6 pb-12">
-        <Text className="font-bold  text-2xl text-white">{item.name}</Text>
-        <Text className="text-white text-sm line-clamp-3">
-          {item.description}
-        </Text>
+      <View className="absolute bottom-0 p-6 pb-12 bg-def">
+        <AppText text={item.name} size="title" />
+        <AppText
+          text={item.description.replace(/[\s]{3,}/g, " ")}
+          className="text-gray-300 text-sm line-clamp-3"
+        />
       </View>
     </View>
   );
@@ -45,7 +48,7 @@ const style = StyleSheet.create({
   },
   banner: {
     width: "100%",
-    height: 300,
+    height: "100%",
     resizeMode: "center",
   },
   background: {
