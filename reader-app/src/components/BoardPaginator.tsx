@@ -6,14 +6,11 @@ export default function BoardPaginator({ data, scrollX }: { data: any[], scrollX
   return (
     <View
       style={{
-        flex: 1,
         flexDirection: "row",
         height: 10,
-        position: "absolute",
-        zIndex: 50,
-        bottom: 16,
         justifyContent: "center",
-        width: '100%'
+        width: '100%',
+        paddingTop: 10
       }}
     >
       {data.map((_, i) => {

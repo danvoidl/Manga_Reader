@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-type Sizes = "title" | "subtitle" | "text" | "sub";
+type Sizes = "title" | "subtitle" | "text" | "sub" | "xs";
 
 interface AppTextProps {
   text: string;
@@ -13,6 +13,7 @@ const sizeClasses: Record<Sizes, string> = {
   subtitle: "text-white font-semibold text-2xl",
   text: "text-white text-base",
   sub: "text-white text-sm",
+  xs: "text-xs"
 };
 
 export default function AppText({ text, size = "text", className = '' }: AppTextProps) {

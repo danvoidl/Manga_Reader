@@ -1,26 +1,26 @@
 import { mangaCovers } from "@/seed/mangas";
 import { View, FlatList, Animated } from "react-native";
-import Banner from "./Banner";
 import { useRef, useState } from "react";
 import BoardPaginator from "./BoardPaginator";
+import HomeBanner from "./HomeBanner";
 
 export default function Board() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const viewableItemschanged = useRef(({ viewableItems }: any) => {
-    setCurrentIndex(viewableItems[0].index);
+    setCurrentIndex(viewableItems[0]?.index);
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   const slidesRef = useRef(null);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,  }}>
       <View style={{ flex: 3, position: "relative" }}>
         <FlatList
           data={mangaCovers.slice(0, 8)}
-          renderItem={({ item }) => <Banner item={item} />}
+          renderItem={({ item }) => <HomeBanner manga={item} />}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled

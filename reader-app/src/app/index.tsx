@@ -1,18 +1,14 @@
 import AppText from "@/components/AppText";
 import Board from "@/components/Board";
-import LatestUpdate from "@/components/LatestUpdate";
 import VerticalManga from "@/components/VerticalManga";
-import { mangaCovers, mangaCovers2, mangaCovers3, mangaCovers4 } from "@/seed/mangas";
-import { View, ScrollView, FlatList, StyleSheet } from "react-native";
+import { mangaCovers2, mangaCovers3, mangaCovers4 } from "@/seed/mangas";
+import { Link } from "expo-router";
+import { View, ScrollView, FlatList, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function IndexScreen() {
   return (
-    <SafeAreaView
-      className="flex-1 bg-default-black"
-      edges={["left", "right", "bottom"]}
-    >
+    <SafeAreaView className="flex-1 " edges={["left", "right", "bottom"]}>
       <ScrollView className="flex-1">
         <View className="mb-6 h-[60vh] relative">
           <Board />
