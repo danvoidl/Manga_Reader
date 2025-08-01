@@ -7,7 +7,7 @@ import AppText from "@/components/AppText";
 
 export default function MangaPage() {
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1" edges={['bottom']}>
       <ScrollView className="flex-1">
         <MangaPageBanner />
 

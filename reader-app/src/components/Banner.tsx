@@ -37,6 +37,12 @@ export default function Banner({ cover }: { cover: string }) {
           style={style.background}
           locations={[0, 0.7, 1]}
         />
+
+        <LinearGradient
+          colors={[ "rgba(38,38,38,1)", "transparent"]}
+          style={style.background2}
+          locations={[0, 0.7, 1]}
+        />
       </View>
     </View>
   );
@@ -49,6 +55,15 @@ const style = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 180,
+    zIndex: 1,
+    elevation: 20,
+  },
+  background2: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 60,
     zIndex: 1,
     elevation: 20,
   },

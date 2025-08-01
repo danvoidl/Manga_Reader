@@ -1,7 +1,8 @@
 import { Image } from "expo-image";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import AppText from "../AppText";
 import Icon from "@react-native-vector-icons/material-design-icons";
+import { useRouter } from "expo-router";
 
 interface Chapter {
   chapterImg: string;
@@ -11,9 +12,11 @@ interface Chapter {
 }
 
 export default function VerticalChapter({ chapter }: { chapter: Chapter }) {
+  const router = useRouter()
+  
   return (
     <View style={{ width: "48%", marginBottom: 16 }}>
-      <View>
+      <Pressable onPress={() => router.push('/manga-chapter/id')}>
         <Image
           style={style.banner}
           source={chapter.chapterImg}
@@ -21,7 +24,7 @@ export default function VerticalChapter({ chapter }: { chapter: Chapter }) {
           transition={1000}
           contentPosition={"center"}
         />
-      </View>
+      </Pressable>
 
       <View className="mt-2">
         <AppText text={`${chapter.chapterName} #${chapter.chapterNumber}`} />
