@@ -13,7 +13,6 @@ export default function HomeBanner({ manga }: { manga: Manga }) {
   return (
     <View>
       <Banner cover={manga.cover} />
-
       <MangaInfo resume manga={manga} />
     </View>
   );

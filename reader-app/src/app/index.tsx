@@ -1,10 +1,9 @@
+import { mangaCovers2, mangaCovers3, mangaCovers4 } from "@/seed/mangas";
+import { View, ScrollView, FlatList, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AppText from "@/components/AppText";
 import Board from "@/components/Board";
 import VerticalManga from "@/components/VerticalManga";
-import { mangaCovers2, mangaCovers3, mangaCovers4 } from "@/seed/mangas";
-import { Link } from "expo-router";
-import { View, ScrollView, FlatList, StyleSheet, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function IndexScreen() {
   return (

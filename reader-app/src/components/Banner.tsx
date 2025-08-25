@@ -41,7 +41,7 @@ export default function Banner({ cover }: { cover: string }) {
         <LinearGradient
           colors={[ "rgba(38,38,38,1)", "transparent"]}
           style={style.background2}
-          locations={[0, 0.7, 1]}
+          locations={[0, 1]}
         />
       </View>
     </View>

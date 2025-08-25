@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'default-black': "#262626"
+        'default-black': "#262626",
+        'callout': '#AD89FF'
       }
     },
   },
