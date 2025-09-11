@@ -11,7 +11,7 @@ export function ChoosePageList({ onPagePick }: Props) {
   const { handleSlide } = useChapterControl();
 
   function handleChoosePage(chapterNum: number) {
-    handleSlide(chapterNum - 1);
+    handleSlide(chapterNum - 1, false);
     onPagePick()
   }
 

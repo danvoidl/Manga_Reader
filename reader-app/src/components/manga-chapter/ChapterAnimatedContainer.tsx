@@ -18,9 +18,6 @@ export function ChapterAnimatedContainer({ children }: GenericComponentProps) {
   });
 
   useEffect(() => {
-    console.log('SYSTEMBARVISIBLE', isSystemBarsVisible, opacity.get());
-    
-
     opacity.set(withTiming(isSystemBarsVisible ? 1 : 0, { duration: 500 }));
   }, [isSystemBarsVisible]);
 
