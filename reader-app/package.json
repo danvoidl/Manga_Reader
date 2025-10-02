@@ -16,6 +16,7 @@
     "clsx": "^2.1.1",
     "expo": "53.0.11",
     "expo-constants": "~17.1.6",
+    "expo-dev-client": "~5.2.4",
     "expo-image": "~2.3.2",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",

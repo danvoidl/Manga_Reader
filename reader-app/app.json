@@ -35,6 +35,13 @@
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "03ec70f3-3577-4385-94a7-56cfe979a5a8"
+      }
+    },
+    "owner": "danvoidl"
   }
 }
