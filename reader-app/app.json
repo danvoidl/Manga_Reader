@@ -7,12 +7,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#262626"
-    },
     "ios": {
       "supportsTablet": true
     },
@@ -21,6 +15,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#262626"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.danvoidl.readerapp"
     },
     "web": {
@@ -35,7 +30,10 @@
             "./node_modules/@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf"
           ]
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-secure-store"
     ],
     "extra": {
       "router": {},

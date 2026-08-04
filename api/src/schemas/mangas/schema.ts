@@ -86,5 +86,11 @@ export const mangaTypeDefs = `#graphql
   type Query {
     mangas: [Manga!]!
     mangasByName(mangaName: String, limit: Int): [Manga!]!
+    "Most recently uploaded chapters (order[latestUploadedChapter]=desc)"
+    latestUpdates(limit: Int): [Manga!]!
+    "Most recently added titles (order[createdAt]=desc)"
+    recentlyAdded(limit: Int): [Manga!]!
+    "Most followed titles (order[followedCount]=desc)"
+    highestRanking(limit: Int): [Manga!]!
   }
 `

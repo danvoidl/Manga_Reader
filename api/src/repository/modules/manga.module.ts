@@ -3,18 +3,26 @@ import type { ApiResp, ListSuccess } from '~/src/types/api'
 import { Manga } from '~/src/types/manga'
 import { Chapter, GetChapterImgs } from '~/src/types/manga-chapter'
 
+type SortOrder = 'asc' | 'desc'
+type MangaOrder = Record<string, SortOrder>
+
 class PostModule extends FetchFactory<any> {
   async getManga(
     mangaName = '',
-    limit = 96
+    limit = 96,
+    order: MangaOrder = { followedCount: 'desc' }
   ): Promise<ApiResp<ListSuccess<Manga[]>>> {
     let query = {
       'includes[]': ['cover_art', 'author'],
       'contentRating[]': ['safe', 'suggestive'],
-      'order[followedCount]': 'desc',
       'availableTranslatedLanguage[]': 'pt-br',
       limit: limit
     } as Record<string, any>
+
+    // MangaDex expects sorting as order[<field>]=asc|desc
+    for (const [field, direction] of Object.entries(order)) {
+      query[`order[${field}]`] = direction
+    }
 
     if (mangaName) query['title'] = mangaName
 
