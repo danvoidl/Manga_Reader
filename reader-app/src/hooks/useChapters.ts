@@ -15,8 +15,7 @@ interface UseChaptersResult {
   loadMore: () => void
 }
 
-// Loads a manga's chapters in pages of `pageSize` (10 by default). Dedupe +
-// language priority happen server-side; each page is sliced from the deduped
+// Loads a manga's chapters in pages of `pageSize` (10 by default). Each page is sliced from the deduped
 // list, so the next page's offset is simply how many rows we've loaded so far.
 export function useChapters(
   mangaId?: string,

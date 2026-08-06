@@ -1,17 +1,10 @@
 import { View, useWindowDimensions } from "react-native";
 import AppText from "../AppText";
 import Chip from "../Chip";
-
-interface Manga {
-  id?: string;
-  cover?: string;
-  description: string;
-  name: string;
-  tags?: string[];
-}
+import type { MangaDetail } from "@/types/manga";
 
 interface MangaInfoProps {
-  manga: Manga;
+  manga: MangaDetail;
   resume?: boolean;
 }
 

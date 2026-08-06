@@ -1,12 +1,12 @@
 import { View, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Board from '@/components/Board'
+import Board from '@/components/home/Board'
 import AccountButton from '@/components/home/AccountButton'
-import ContinueReadingSection from '@/components/home/ContinueReadingSection'
-import { NewUpdatesSection } from '@/components/home/NewUpdatesSection'
-import { ActionAdventureMangaSection } from '@/components/home/ActionAndAdventureSection'
-import { RomanceSection } from '@/components/home/RomanceSection'
-import { MostPopuparSection } from '@/components/home/MostPopularSection'
+import ContinueReadingSection from '@/components/home/sections/ContinueReadingSection'
+import { NewUpdatesSection } from '@/components/home/sections/NewUpdatesSection'
+import { ActionAdventureMangaSection } from '@/components/home/sections/ActionAndAdventureSection'
+import { RomanceSection } from '@/components/home/sections/RomanceSection'
+import HighestRanking from '@/components/home/HighestRanking'
 
 export default function IndexScreen() {
   return (
@@ -21,7 +21,7 @@ export default function IndexScreen() {
         <View className="mb-14">
           <ContinueReadingSection />
 
-          <MostPopuparSection />
+          <HighestRanking />
 
           <NewUpdatesSection />
 

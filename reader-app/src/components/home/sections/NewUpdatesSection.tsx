@@ -1,4 +1,4 @@
-import MangaSection from './MangaSection'
+import MangaSection from '../MangaSection'
 import { useMangas } from '@/hooks/useMangas'
 import { LATEST_UPDATES_QUERY } from '@/services/manga'
 

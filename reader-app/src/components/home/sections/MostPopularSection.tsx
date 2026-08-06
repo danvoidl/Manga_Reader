@@ -1,4 +1,4 @@
-import MangaSection from './MangaSection'
+import MangaSection from '../MangaSection'
 import { useMangas } from '@/hooks/useMangas'
 import { HIGHEST_RANKING_QUERY } from '@/services/manga'
 

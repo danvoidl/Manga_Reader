@@ -1,4 +1,4 @@
-import MangaSection from './MangaSection'
+import MangaSection from '../MangaSection'
 import { useMangasByTag } from '@/hooks/useMangasByTag'
 import { TAG_IDS } from '@/constants/general'
 

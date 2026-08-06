@@ -76,9 +76,9 @@ export const HIGHEST_RANKING_QUERY = graphql(`
 `)
 
 // Featured carousel (Board) — highest ranking, but with synopsis + tags.
-export const FEATURED_QUERY = graphql(`
+export const MOST_POPULAR_QUERY = graphql(`
   query Featured($limit: Int) {
-    mangas: highestRanking(limit: $limit) {
+    mangas: mostPopular(limit: $limit) {
       ...DetailFields
     }
   }
@@ -105,6 +105,25 @@ export const MANGAS_BY_TAG_QUERY = graphql(`
 export const MANGAS_BY_NAME_QUERY = graphql(`
   query MangasByName($mangaName: String, $limit: Int) {
     mangas: mangasByName(mangaName: $mangaName, limit: $limit) {
+      ...CardFields
+    }
+  }
+`)
+
+// Explore screen — optional title + multiple sort criteria + included tag ids.
+export const EXPLORE_MANGAS_QUERY = graphql(`
+  query ExploreMangas(
+    $title: String
+    $order: [MangaOrderInput!]
+    $includedTags: [ID!]
+    $limit: Int
+  ) {
+    mangas: exploreMangas(
+      title: $title
+      order: $order
+      includedTags: $includedTags
+      limit: $limit
+    ) {
       ...CardFields
     }
   }

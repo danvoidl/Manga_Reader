@@ -1,10 +1,14 @@
 import { Tabs } from 'expo-router'
 import Icon from '@react-native-vector-icons/material-design-icons'
+import { SymbolView } from 'expo-symbols'
+import { Drawer } from 'expo-router/drawer';
+import { useState } from 'react';
 
 const ACTIVE = '#AD89FF'
 const INACTIVE = '#8b8b93'
 
 export default function TabsLayout() {
+
   return (
     <Tabs
       screenOptions={{
@@ -24,9 +28,9 @@ export default function TabsLayout() {
         options={{
           title: 'Início',
           tabBarIcon: ({ color, size, focused }) => (
-            <Icon
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
+            <SymbolView
+              name={{ ios: 'homepod', android: 'home' }}
+              tintColor={color}
               size={size}
             />
           )
@@ -37,9 +41,9 @@ export default function TabsLayout() {
         options={{
           title: 'Explorar',
           tabBarIcon: ({ color, size, focused }) => (
-            <Icon
-              name={focused ? 'compass' : 'compass-outline'}
-              color={color}
+            <SymbolView
+              name={{ ios: 'e.circle', android: 'explore' }}
+              tintColor={color}
               size={size}
             />
           )
