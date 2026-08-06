@@ -8,7 +8,8 @@ import { useCallback } from "react";
 
 export function Chapters() {
   const { toggleBars } = useSystemBars();
-  const { pages, chapterListRef, handlePageChange } = useChapterControl();
+  const { pages, chapterListRef, handlePageChange, initialPage } =
+    useChapterControl();
   const { width } = useWindowDimensions();
 
   const onViewableItemsChanged = useCallback(
@@ -31,6 +32,12 @@ export function Chapters() {
         snapToAlignment="start"
         disableIntervalMomentum={true}
         ref={chapterListRef}
+        initialScrollIndex={initialPage}
+        getItemLayout={(_, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
         renderItem={({ item }) => (
           <Image
             style={{ flex: 1, width }}

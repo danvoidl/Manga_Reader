@@ -3,6 +3,7 @@ import { FlatList } from "react-native-gesture-handler";
 
 interface Props {
   pages: string[];
+  initialPage?: number;
   children: React.ReactNode;
 }
 
@@ -11,6 +12,7 @@ interface CtxProps {
   pages: string[];
   totalPages: number;
   currentPage: number;
+  initialPage: number;
   chapterListRef: React.RefObject<FlatList<any> | null>;
   handleSlide: (page: number, animated?: boolean) => void;
 }
@@ -31,8 +33,12 @@ export function useChapterControl() {
   return context;
 }
 
-export function ChapterControlProvider({ children, pages }: Props) {
-  const [currentPage, setCurrentPage] = useState(0);
+export function ChapterControlProvider({
+  children,
+  pages,
+  initialPage = 0,
+}: Props) {
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const chapterListRef = useRef<FlatList>(null);
 
   const handlePageChange = (newPage: number) => setCurrentPage(newPage);
@@ -47,6 +53,7 @@ export function ChapterControlProvider({ children, pages }: Props) {
     <ChapterControlContext.Provider
       value={{
         currentPage,
+        initialPage,
         pages,
         totalPages: pages.length,
         handlePageChange,

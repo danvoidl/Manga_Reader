@@ -11,8 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const STORAGE_KEY = '@continue-reading'
 const MAX_ENTRIES = 10
 
-// One row in the "Continuar lendo" carousel. `image` is a random page picked
-// from the chapter at read time (used as the cover); `progress` is 0..1.
+// One row in the "Continuar lendo" carousel. `image` is the last page the user
+// saw (used as the cover); `page` is its 0-based index; `progress` is 0..1.
 export interface ContinueReadingEntry {
   mangaId: string
   mangaName: string
@@ -20,17 +20,23 @@ export interface ContinueReadingEntry {
   chapterNumber: string
   chapterName: string
   image: string
+  page: number
   progress: number
   readAt: number
 }
 
-// What the reader records when a chapter is opened (progress/readAt are derived).
-type RecordInput = Omit<ContinueReadingEntry, 'progress' | 'readAt'>
+// What the reader records when a chapter is opened (page/progress/readAt are derived).
+type RecordInput = Omit<ContinueReadingEntry, 'page' | 'progress' | 'readAt'>
 
 interface CtxProps {
   entries: ContinueReadingEntry[]
   recordOpen: (entry: RecordInput) => void
-  updateProgress: (chapterId: string, progress: number) => void
+  updateProgress: (
+    chapterId: string,
+    page: number,
+    progress: number,
+    image: string
+  ) => void
 }
 
 const ContinueReadingContext = createContext<CtxProps | undefined>(undefined)
@@ -93,11 +99,20 @@ export function ContinueReadingProvider({
   }, [])
 
   // Upsert 1-per-manga: drop any existing entry for this manga, put the new one
-  // at the front, cap at MAX_ENTRIES.
+  // at the front, cap at MAX_ENTRIES. Re-opening the *same* chapter keeps its
+  // saved page/progress/cover so resume survives even if the exit write is missed;
+  // opening a different chapter of the manga starts fresh at page 0.
   const recordOpen = useCallback(
     (entry: RecordInput) => {
+      const previous = entriesRef.current.find(
+        (e) => e.chapterId === entry.chapterId
+      )
+      const resume = previous
+        ? { page: previous.page, progress: previous.progress, image: previous.image }
+        : { page: 0, progress: 0, image: entry.image }
+
       const next: ContinueReadingEntry[] = [
-        { ...entry, progress: 0, readAt: Date.now() },
+        { ...entry, ...resume, readAt: Date.now() },
         ...entriesRef.current.filter((e) => e.mangaId !== entry.mangaId)
       ].slice(0, MAX_ENTRIES)
 
@@ -107,12 +122,12 @@ export function ContinueReadingProvider({
   )
 
   const updateProgress = useCallback(
-    (chapterId: string, progress: number) => {
+    (chapterId: string, page: number, progress: number, image: string) => {
       let changed = false
       const next = entriesRef.current.map((e) => {
         if (e.chapterId !== chapterId) return e
         changed = true
-        return { ...e, progress }
+        return { ...e, page, progress, image }
       })
 
       if (changed) setAndPersist(next)

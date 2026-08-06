@@ -24,6 +24,7 @@ function ContinueCard({ entry }: { entry: ContinueReadingEntry }) {
             mangaId: entry.mangaId,
             mangaName: entry.mangaName,
             chapterNumber: entry.chapterNumber,
+            page: String(entry.page ?? 0),
           },
         })
       }

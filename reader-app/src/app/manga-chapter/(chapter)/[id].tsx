@@ -9,13 +9,14 @@ import { useChapterImgs } from '@/hooks/useChapterImgs'
 import AppText from '@/components/AppText'
 
 export default function MangaChapter() {
-  const { id, mangaId, mangaName, chapterNumber, subtitle } =
+  const { id, mangaId, mangaName, chapterNumber, subtitle, page } =
     useLocalSearchParams<{
       id?: string
       mangaId?: string
       mangaName?: string
       chapterNumber?: string
       subtitle?: string
+      page?: string
     }>()
   const { data: pages, loading, error } = useChapterImgs(id)
 
@@ -42,7 +43,7 @@ export default function MangaChapter() {
   return (
     <SystemBarsProvider>
       <View className="bg-black flex-1 relative">
-        <ChapterControlProvider pages={pages}>
+        <ChapterControlProvider pages={pages} initialPage={Number(page) || 0}>
           <Chapters />
 
           <ChapterController />
