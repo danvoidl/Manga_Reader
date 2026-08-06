@@ -32,6 +32,27 @@ export const mangaChaptersResolver = {
       }
     },
 
+    adjacentChapters: async (parent: unknown, args: QueryArgs) => {
+      const [error, resp] = await modules.manga.getMangaChapters(
+        args.mangaId,
+        LANG_PRIORITY
+      )
+
+      if (error) return { next: null, prev: null }
+
+      // Deduped list is sorted by chapter number descending (latest first),
+      // so the next chapter to read sits at a lower index.
+      const deduped = dedupeByBestLanguage(resp.data)
+      const i = deduped.findIndex((chapter) => chapter.id === args.chapterId)
+
+      if (i === -1) return { next: null, prev: null }
+
+      return {
+        next: deduped[i - 1] ?? null,
+        prev: deduped[i + 1] ?? null
+      }
+    },
+
     chapterImgs: async (parent: unknown, args: QueryArgs) => {
       const [error, resp] = await modules.manga.getMangaChapterImgs(
         args.chapterId

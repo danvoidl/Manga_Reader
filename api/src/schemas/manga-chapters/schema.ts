@@ -71,8 +71,17 @@ export const mangaChaptersTypeDefs = /* GraphQL */ `
     offset: Int!
   }
 
+  "The chapters immediately before/after a given chapter in reading order."
+  type AdjacentChapters {
+    "Next chapter to read (higher number); null if it is the latest."
+    next: Chapter
+    "Previous chapter (lower number); null if it is the first."
+    prev: Chapter
+  }
+
   type Query {
     chapters(mangaId: ID!, limit: Int = 10, offset: Int = 0): ChapterPage!
     chapterImgs(chapterId: ID!): [String!]!
+    adjacentChapters(mangaId: ID!, chapterId: ID!): AdjacentChapters!
   }
 `
