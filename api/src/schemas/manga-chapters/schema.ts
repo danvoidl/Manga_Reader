@@ -63,8 +63,16 @@ export const mangaChaptersTypeDefs = /* GraphQL */ `
     relationships: [ChapterRelationship]
   }
 
+  "A page of chapters (deduped to one row per chapter number, best western language)."
+  type ChapterPage {
+    items: [Chapter!]!
+    total: Int!
+    limit: Int!
+    offset: Int!
+  }
+
   type Query {
-    chapters(mangaId: ID!): [Chapter]
+    chapters(mangaId: ID!, limit: Int = 10, offset: Int = 0): ChapterPage!
     chapterImgs(chapterId: ID!): [String!]!
   }
 `

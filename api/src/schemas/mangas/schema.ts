@@ -4,6 +4,8 @@ export const mangaTypeDefs = `#graphql
     type: String
     attributes: MangaAttributes
     relationships: [MangaRelationship!]!
+    "Full MangaDex cover URL, built server-side from the cover_art relationship. size = thumbnail width (256/512) or 0 for the original."
+    coverUrl(size: Int = 512): String
   }
 
   type MangaAttributes {
@@ -85,7 +87,11 @@ export const mangaTypeDefs = `#graphql
 
   type Query {
     mangas: [Manga!]!
+    "A single manga by id (with cover_art + author includes)"
+    manga(id: ID!): Manga
     mangasByName(mangaName: String, limit: Int): [Manga!]!
+    "Titles filtered by one or more MangaDex tag ids (includedTags[]=), most followed first"
+    mangasByTag(includedTags: [ID!]!, limit: Int): [Manga!]!
     "Most recently uploaded chapters (order[latestUploadedChapter]=desc)"
     latestUpdates(limit: Int): [Manga!]!
     "Most recently added titles (order[createdAt]=desc)"

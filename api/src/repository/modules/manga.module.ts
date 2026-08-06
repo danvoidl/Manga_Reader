@@ -10,7 +10,8 @@ class PostModule extends FetchFactory<any> {
   async getManga(
     mangaName = '',
     limit = 96,
-    order: MangaOrder = { followedCount: 'desc' }
+    order: MangaOrder = { followedCount: 'desc' },
+    includedTags: string[] = []
   ): Promise<ApiResp<ListSuccess<Manga[]>>> {
     let query = {
       'includes[]': ['cover_art', 'author'],
@@ -25,6 +26,7 @@ class PostModule extends FetchFactory<any> {
     }
 
     if (mangaName) query['title'] = mangaName
+    if (includedTags.length) query['includedTags[]'] = includedTags
 
     return this.call({
       method: 'GET',
@@ -35,13 +37,28 @@ class PostModule extends FetchFactory<any> {
     })
   }
 
+  async getMangaById(id: string): Promise<ApiResp<ListSuccess<Manga>>> {
+    return this.call({
+      method: 'GET',
+      url: `/manga/${id}`,
+      fetchOptions: {
+        query: {
+          'includes[]': ['cover_art', 'author']
+        }
+      }
+    })
+  }
+
   async getMangaChapters(
-    mangaId: string
+    mangaId: string,
+    translatedLanguages: string[],
+    limit = 500
   ): Promise<ApiResp<ListSuccess<Chapter[]>>> {
     const query = {
       'includes[]': 'scanlation_group',
-      'order[volume]': 'asc',
-      'order[chapter]': 'asc'
+      'translatedLanguage[]': translatedLanguages,
+      'order[chapter]': 'desc',
+      limit
     }
 
     return this.call({

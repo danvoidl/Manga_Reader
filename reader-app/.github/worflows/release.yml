@@ -1,0 +1,25 @@
+name: Release
+on:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: write        # criar tag, release e commitar o changelog
+  issues: write          # comentar em issues/PRs incluídos na release
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # semantic-release precisa do histórico INTEIRO
+          persist-credentials: false # evita conflito de auth com o token do release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci                 # instala a ferramenta de release da raiz
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
