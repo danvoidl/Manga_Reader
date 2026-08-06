@@ -1,10 +1,8 @@
 {
-  "release": {
-    "branches": [
-      "main",
-      { "name": "develop", "channel": "beta", "prerelease": "beta" }
-    ]
-  },
+  "branches": [
+    "main",
+    { "name": "develop", "prerelease": "beta" }
+  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -15,9 +13,16 @@
       }
     ],
     [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false,
+        "pkgRoot": "reader-app"
+      }
+    ],
+    [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md"],
+        "assets": ["reader-app/package.json", "CHANGELOG.md"],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
