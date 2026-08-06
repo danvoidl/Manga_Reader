@@ -1,6 +1,6 @@
 import FetchFactory from '../factory'
 import type { ApiResp, ListSuccess } from '~/src/types/api'
-import { Manga } from '~/src/types/manga'
+import { Manga, Tag } from '~/src/types/manga'
 import { Chapter, GetChapterImgs } from '~/src/types/manga-chapter'
 
 type SortOrder = 'asc' | 'desc'
@@ -34,6 +34,13 @@ class PostModule extends FetchFactory<any> {
       fetchOptions: {
         query
       }
+    })
+  }
+
+  async getTags(): Promise<ApiResp<ListSuccess<Tag[]>>> {
+    return this.call({
+      method: 'GET',
+      url: '/manga/tag'
     })
   }
 

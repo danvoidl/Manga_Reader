@@ -63,7 +63,7 @@ export const mangaTypeDefs = `#graphql
 
   type TagAttributes {
     name: LocalizedString
-    description: String
+    description: LocalizedString
     group: String
     version: Int
   }
@@ -85,6 +85,13 @@ export const mangaTypeDefs = `#graphql
     version: Int
   }
 
+  input MangaOrderInput {
+    "MangaDex order[] field, e.g. rating, followedCount, year, title, relevance"
+    field: String!
+    "asc | desc (defaults to desc)"
+    direction: String
+  }
+
   type Query {
     mangas: [Manga!]!
     "A single manga by id (with cover_art + author includes)"
@@ -96,7 +103,18 @@ export const mangaTypeDefs = `#graphql
     latestUpdates(limit: Int): [Manga!]!
     "Most recently added titles (order[createdAt]=desc)"
     recentlyAdded(limit: Int): [Manga!]!
-    "Most followed titles (order[followedCount]=desc)"
+    "Highest ranked titles (order[highestRanking]=desc)"
     highestRanking(limit: Int): [Manga!]!
+    "Most followed titles (order[followedCount]=desc)"
+    mostPopular(limit: Int): [Manga!]!
+    "All available MangaDex categories/tags (genres, themes, formats)"
+    categories: [Tag!]!
+    "Explore search: optional title + multiple sort criteria + included tag ids, all combined"
+    exploreMangas(
+      title: String
+      order: [MangaOrderInput!]
+      includedTags: [ID!]
+      limit: Int
+    ): [Manga!]!
   }
 `

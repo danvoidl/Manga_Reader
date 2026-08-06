@@ -51,7 +51,7 @@ interface MangaLinks {
   engtl: string
 }
 
-interface Tag {
+export interface Tag {
   id: string
   type: string
   attributes: TagAttributes

@@ -15,6 +15,18 @@ interface ListArgs {
   limit?: number
 }
 
+interface OrderInput {
+  field: string
+  direction?: SortOrder
+}
+
+interface ExploreArgs {
+  title?: string
+  order?: OrderInput[]
+  includedTags?: string[]
+  limit?: number
+}
+
 type SortOrder = 'asc' | 'desc'
 
 const DEFAULT_LIMIT = 96
@@ -61,12 +73,45 @@ export const mangaResolvers = {
       fetchMangas({ latestUploadedChapter: 'desc' }, args.limit),
     recentlyAdded: async (parent: unknown, args: ListArgs) =>
       fetchMangas({ createdAt: 'desc' }, args.limit),
-    highestRanking: async (parent: unknown, args: ListArgs) =>
+    mostPopular: async (parent: unknown, args: ListArgs) =>
       fetchMangas({ followedCount: 'desc' }, args.limit),
+    highestRanking: async (parent: unknown, args: ListArgs) =>
+      fetchMangas({ rating: 'desc' }, args.limit),
     mangasByTag: async (
       parent: unknown,
       args: { includedTags: string[]; limit?: number }
-    ) => fetchMangas({ followedCount: 'desc' }, args.limit, args.includedTags)
+    ) => fetchMangas({ followedCount: 'desc' }, args.limit, args.includedTags),
+    categories: async () => {
+      const [error, resp] = await modules.manga.getTags()
+
+      if (error) return []
+
+      return resp.data
+    },
+    // Flexible Explore query: combines an optional title, multiple sort criteria
+    // (order[<field>]=asc|desc) and included tag ids in a single call. Reuses
+    // getManga, which already supports all four inputs.
+    exploreMangas: async (parent: unknown, args: ExploreArgs) => {
+      const order = (args.order ?? []).reduce<Record<string, SortOrder>>(
+        (acc, o) => ({ ...acc, [o.field]: o.direction ?? 'desc' }),
+        {}
+      )
+
+      const finalOrder = Object.keys(order).length
+        ? order
+        : { followedCount: 'desc' as SortOrder }
+
+      const [error, resp] = await modules.manga.getManga(
+        args.title ?? '',
+        args.limit,
+        finalOrder,
+        args.includedTags ?? []
+      )
+
+      if (error) return []
+
+      return resp.data
+    }
   },
   Manga: {
     relationships: (parent: Manga) => {
