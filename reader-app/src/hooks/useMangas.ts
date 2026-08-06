@@ -1,46 +1,39 @@
-import { useEffect, useState } from "react";
-import { gqlRequest } from "@/services/graphql";
-import { toMangaCovers, type MangaListResponse } from "@/services/manga";
-import type { MangaCover } from "@/types/manga";
+import { gqlRequest } from '@/services/graphql'
+import type { Manga, MangaCover } from '@/types/manga'
+import { useQuery } from '@tanstack/react-query'
+import { toMangaCovers } from '@/utils/manga'
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 interface UseMangasResult {
-  data: MangaCover[];
-  loading: boolean;
-  error: string | null;
+  data: MangaCover[]
+  loading: boolean
+  error: string | null
 }
 
 /**
  * Fetches a manga list from the GraphQL API. `query` must alias its root field
  * to `mangas` (see the queries in services/manga.ts).
  */
-export function useMangas(query: string, limit = 8): UseMangasResult {
-  const [data, setData] = useState<MangaCover[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Every list query aliases its root field to `mangas` and selects CardFields,
+// so the result is always { mangas: Manga[] }. Typing the param as the codegen
+// document lets gqlRequest infer everything — the wrong query won't compile.
+type MangaListDocument = TypedDocumentNode<
+  { mangas: Manga[] },
+  { limit?: number | null }
+>
 
-  useEffect(() => {
-    let active = true;
+export function useMangas(query: MangaListDocument, limit = 8): UseMangasResult {
+  const { data, isLoading, error } = useQuery({
+    // `limit` is part of the key: the same query at different limits (e.g. home
+    // vs. Explore) must not share a cache entry.
+    queryKey: ['mangas', query, limit],
+    queryFn: () => gqlRequest(query, { limit }),
+    select: (resp) => toMangaCovers(resp.mangas)
+  })
 
-    setLoading(true);
-    setError(null);
-
-    gqlRequest<MangaListResponse>(query, { limit })
-      .then((resp) => {
-        if (!active) return;
-        setData(toMangaCovers(resp.mangas));
-      })
-      .catch((err: unknown) => {
-        if (!active) return;
-        setError(err instanceof Error ? err.message : "Erro ao carregar mangás");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [query, limit]);
-
-  return { data, loading, error };
+  return {
+    data: data ?? [],
+    loading: isLoading,
+    error: error?.message ?? null
+  }
 }

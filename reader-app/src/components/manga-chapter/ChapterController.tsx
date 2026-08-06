@@ -5,12 +5,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChoosePageModal } from "./ChoosePageModal";
 import { useChapterControl } from "@/store/ChapterControlContext";
 import { ChapterAnimatedContainer } from "./ChapterAnimatedContainer";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export function ChapterController() {
   const { totalPages, currentPage, handleSlide } = useChapterControl();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { title, subtitle } = useLocalSearchParams<{
+    title?: string;
+    subtitle?: string;
+  }>();
 
   return (
     <ChapterAnimatedContainer>
@@ -23,12 +27,17 @@ export function ChapterController() {
             <Icon name={"arrow-left"} color={"#ad89ff"} size={26} />
           </Pressable>
           
-          <View className="">
-            <Text className="text-white text-sm">
-              Erio and the Eletric Doll
-            </Text>
-            <Text className="text-white font-semibold text-xl">
-              Capítulo 1 - Mechanical Angel
+          <View className="flex-1 pr-2">
+            {subtitle ? (
+              <Text className="text-white text-sm" numberOfLines={1}>
+                {subtitle}
+              </Text>
+            ) : null}
+            <Text
+              className="text-white font-semibold text-xl"
+              numberOfLines={1}
+            >
+              {title ?? "Capítulo"}
             </Text>
           </View>
         </View>

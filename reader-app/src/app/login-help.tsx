@@ -1,18 +1,18 @@
-import { Linking, Pressable, ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import Icon from "@react-native-vector-icons/material-design-icons";
-import AppText from "@/components/AppText";
+import { Linking, Pressable, ScrollView, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useRouter } from 'expo-router'
+import Icon from '@react-native-vector-icons/material-design-icons'
+import AppText from '@/components/AppText'
 
-const SETTINGS_URL = "https://mangadex.org/settings";
+const SETTINGS_URL = 'https://mangadex.org/settings'
 
 const STEPS = [
-  "Acesse mangadex.org/settings já logado na sua conta.",
-  "Abra a seção “API Clients” e solicite um novo client pessoal.",
-  "Aguarde a aprovação (pode ser automática ou manual da equipe da MangaDex).",
-  "Quando aprovado, copie o Client ID (formato personal-client-...).",
-  "Clique em “Get Secret” para revelar o Client Secret e copie-o.",
-];
+  'Acesse mangadex.org/settings já logado na sua conta.',
+  'Abra a seção “API Clients” e solicite um novo client pessoal.',
+  'Aguarde a aprovação (pode ser automática ou manual da equipe da MangaDex).',
+  'Quando aprovado, copie o Client ID (formato personal-client-...).',
+  'Clique em “Get Secret” para revelar o Client Secret e copie-o.'
+]
 
 function Step({ index, text }: { index: number; text: string }) {
   return (
@@ -24,17 +24,24 @@ function Step({ index, text }: { index: number; text: string }) {
           className="font-bold text-default-black"
         />
       </View>
-      <AppText text={text} size="sub" className="flex-1 text-white/80 leading-5" />
+      <AppText
+        text={text}
+        size="sub"
+        className="flex-1 text-white/80 leading-5"
+      />
     </View>
-  );
+  )
 }
 
 export default function LoginHelpScreen() {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
-    <SafeAreaView className="flex-1" edges={["top", "left", "right", "bottom"]}>
-      <ScrollView className="px-6" contentContainerStyle={{ paddingVertical: 8 }}>
+    <SafeAreaView className="flex-1" edges={['top', 'left', 'right', 'bottom']}>
+      <ScrollView
+        className="px-6"
+        contentContainerStyle={{ paddingVertical: 8 }}
+      >
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
@@ -81,5 +88,5 @@ export default function LoginHelpScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

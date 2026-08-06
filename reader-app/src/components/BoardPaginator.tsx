@@ -10,7 +10,7 @@ export default function BoardPaginator({ data, scrollX }: { data: any[], scrollX
         height: 10,
         justifyContent: "center",
         width: '100%',
-        paddingTop: 10
+        paddingTop: 2
       }}
     >
       {data.map((_, i) => {

@@ -1,4 +1,8 @@
-// Shape rendered by the UI (VerticalManga / MangaSection).
+import { CardFieldsFragment, ChapterFieldsFragment, DetailFieldsFragment } from "@/gql/graphql";
+
+// ---- UI shapes -------------------------------------------------------------
+
+// Minimal shape rendered by the card lists (VerticalManga / MangaSection).
 export interface MangaCover {
   cover: string;
   name: string;
@@ -6,27 +10,26 @@ export interface MangaCover {
   description?: string;
 }
 
-// Subset of the GraphQL `Manga` type we actually query.
-export interface LocalizedString {
-  en?: string | null;
-  ja?: string | null;
-  ko?: string | null;
-  ru?: string | null;
-  zh?: string | null;
-  pt_br?: string | null;
-}
-
-export interface GqlMangaRelationship {
-  attributes?: { fileName?: string | null } | null;
-}
-
-export interface GqlManga {
+// Richer shape for the banner + the manga detail page (cover, synopsis, tags).
+export interface MangaDetail {
   id: string;
-  attributes?: {
-    title?: LocalizedString | null;
-    // MangaDex often stores the canonical title in the original romanized
-    // language (e.g. ko-ro) and keeps the English/pt-br title here.
-    altTitles?: (LocalizedString | null)[] | null;
-  } | null;
-  relationships: GqlMangaRelationship[];
+  name: string;
+  cover?: string;
+  description: string;
+  tags: string[];
 }
+
+// A single chapter row (no image): number + title, scan group, language.
+export interface ChapterRow {
+  id: string;
+  number: string;
+  name: string;
+  scan: string;
+  lang: string;
+}
+
+// ---- GraphQL response shapes ----------------------------------------------
+
+export type Manga = CardFieldsFragment
+export type MangaWithDetail = DetailFieldsFragment 
+export type MangaChapter = ChapterFieldsFragment

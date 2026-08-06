@@ -1,15 +1,24 @@
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import Banner from "../Banner";
 import MangaInfo from "../manga/Info";
-import { mangaCovers } from "@/seed/mangas";
+import type { MangaWithDetail } from "@/types/manga";
 
-export default function MangaPageBanner() {
-  const manga = mangaCovers[1];
+interface Props {
+  manga: MangaWithDetail | null;
+}
+
+export function MangaPageBanner({ manga }: Props) {
+  const { height } = useWindowDimensions();
+
+  // Reserve the banner space while the detail is still loading.
+  if (!manga) {
+    return <View style={{ height: height * 0.6 }} />;
+  }
 
   return (
-    <View className="flex-1">
-      <Banner cover={manga.cover} />
-      <MangaInfo manga={manga} />
+    <View className="relative" style={{ minHeight: height * 0.6 }}>
+      <Banner cover={manga.cover ?? ""} />
+      <MangaInfo manga={manga} resume />
     </View>
   );
 }

@@ -1,15 +1,14 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
-import { chapters } from "@/seed/chapters";
-import { useWindowDimensions } from "react-native";
 
 interface Props {
-  totalPages?: number;
+  pages: string[];
   children: React.ReactNode;
 }
 
 interface CtxProps {
   handlePageChange: (page: number) => void;
+  pages: string[];
   totalPages: number;
   currentPage: number;
   chapterListRef: React.RefObject<FlatList<any> | null>;
@@ -32,10 +31,9 @@ export function useChapterControl() {
   return context;
 }
 
-export function ChapterControlProvider({ children, totalPages = 0 }: Props) {
+export function ChapterControlProvider({ children, pages }: Props) {
   const [currentPage, setCurrentPage] = useState(0);
   const chapterListRef = useRef<FlatList>(null);
-  const { width } = useWindowDimensions();
 
   const handlePageChange = (newPage: number) => setCurrentPage(newPage);
 
@@ -49,7 +47,8 @@ export function ChapterControlProvider({ children, totalPages = 0 }: Props) {
     <ChapterControlContext.Provider
       value={{
         currentPage,
-        totalPages: chapters.length,
+        pages,
+        totalPages: pages.length,
         handlePageChange,
         chapterListRef,
         handleSlide,

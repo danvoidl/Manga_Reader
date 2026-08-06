@@ -1,11 +1,11 @@
-import { mangaCovers } from "@/seed/mangas";
-import { View, FlatList, Animated } from "react-native";
+import { View, FlatList, Animated, ActivityIndicator } from "react-native";
 import { useRef, useState } from "react";
-import BoardPaginator from "./BoardPaginator";
 import HomeBanner from "./HomeBanner";
+import { useMangaBanners } from "@/hooks/useMangaBanners";
 
 export default function Board() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { data, loading, error } = useMangaBanners(8);
+  const [, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const viewableItemschanged = useRef(({ viewableItems }: any) => {
@@ -15,11 +15,19 @@ export default function Board() {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   const slidesRef = useRef(null);
 
+  if (loading || error || data.length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        {loading && <ActivityIndicator color="#ffffff" />}
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1,  }}>
+    <View style={{ flex: 1 }}>
       <View style={{ flex: 3, position: "relative" }}>
         <FlatList
-          data={mangaCovers.slice(0, 8)}
+          data={data}
           renderItem={({ item }) => <HomeBanner manga={item} />}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -34,7 +42,6 @@ export default function Board() {
           scrollEventThrottle={32}
           ref={slidesRef}
         />
-        <BoardPaginator data={mangaCovers.slice(0, 8)} scrollX={scrollX} />
       </View>
     </View>
   );

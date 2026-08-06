@@ -1,96 +1,162 @@
-import type { GqlManga, LocalizedString, MangaCover } from "@/types/manga";
+import { graphql } from '@/gql'
 
-const COVERS_BASE_URL = process.env.EXPO_PUBLIC_COVER_API_URL;
-
-// Fields selected for every manga-list query. Each query aliases its root to
-// `mangas` so callers/hooks can always read `data.mangas`.
-const MANGA_FIELDS = `
-  id
-  attributes {
-    title {
-      en
-      pt_br
-      ja
-    }
-    altTitles {
-      en
-      pt_br
-    }
-  }
-  relationships {
+// Lean fields for the horizontal card lists. Each list query aliases its root
+// to `mangas` so callers/hooks can always read `data.mangas`.
+// The cover URL is built server-side (coverUrl) — the client no longer assembles it.
+const CARD_FIELDS = graphql(`
+  fragment CardFields on Manga {
+    id
+    cover: coverUrl(size: 512)
     attributes {
-      fileName
+      title {
+        en
+        pt_br
+        ja
+      }
+      altTitles {
+        en
+        pt_br
+      }
     }
   }
-`;
+`)
 
-export const LATEST_UPDATES_QUERY = `
+// Richer fields for the banner + detail page (adds synopsis + tags).
+const DETAIL_FIELDS = graphql(`
+  fragment DetailFields on Manga {
+    id
+    cover: coverUrl(size: 512)
+    attributes {
+      title {
+        en
+        pt_br
+        ja
+      }
+      altTitles {
+        en
+        pt_br
+      }
+      description {
+        en
+        pt_br
+      }
+      tags {
+        attributes {
+          name {
+            en
+          }
+        }
+      }
+    }
+  }
+`)
+
+export const LATEST_UPDATES_QUERY = graphql(`
   query LatestUpdates($limit: Int) {
-    mangas: latestUpdates(limit: $limit) { ${MANGA_FIELDS} }
-  }
-`;
-
-export const RECENTLY_ADDED_QUERY = `
-  query RecentlyAdded($limit: Int) {
-    mangas: recentlyAdded(limit: $limit) { ${MANGA_FIELDS} }
-  }
-`;
-
-export const HIGHEST_RANKING_QUERY = `
-  query HighestRanking($limit: Int) {
-    mangas: highestRanking(limit: $limit) { ${MANGA_FIELDS} }
-  }
-`;
-
-export interface MangaListResponse {
-  mangas: GqlManga[];
-}
-
-function firstValue(loc?: LocalizedString | null): string | undefined {
-  if (!loc) return undefined;
-  return Object.values(loc).find((value): value is string => Boolean(value));
-}
-
-function pickTitle(attributes?: GqlManga["attributes"]): string {
-  const title = attributes?.title;
-  const altTitles = attributes?.altTitles ?? [];
-
-  // Prefer the canonical title in a language we can read, then fall back to an
-  // English/pt-br alt title, then any populated value, then a placeholder.
-  return (
-    title?.en ??
-    title?.pt_br ??
-    title?.ja ??
-    altTitles.find((alt) => alt?.en)?.en ??
-    altTitles.find((alt) => alt?.pt_br)?.pt_br ??
-    firstValue(title) ??
-    "Sem título"
-  );
-}
-
-function pickCover(manga: GqlManga): string | undefined {
-  const fileName = manga.relationships.find((rel) => rel.attributes?.fileName)
-    ?.attributes?.fileName;
-
-  if (!fileName) return undefined;
-
-  // `.256.jpg` requests the small thumbnail variant.
-  return `${COVERS_BASE_URL}/${manga.id}/${fileName}.256.jpg`;
-}
-
-// Maps a GraphQL manga into the shape the UI renders, dropping entries with no cover.
-export function toMangaCovers(mangas: GqlManga[]): MangaCover[] {
-  return mangas.reduce<MangaCover[]>((acc, manga) => {
-    const cover = pickCover(manga);
-
-    if (cover) {
-      acc.push({
-        id: manga.id,
-        name: pickTitle(manga.attributes),
-        cover,
-      });
+    mangas: latestUpdates(limit: $limit) {
+      ...CardFields
     }
+  }
+`)
 
-    return acc;
-  }, []);
-}
+export const RECENTLY_ADDED_QUERY = graphql(`
+  query RecentlyAdded($limit: Int) {
+    mangas: recentlyAdded(limit: $limit) {
+      ...CardFields
+    }
+  }
+`)
+
+export const HIGHEST_RANKING_QUERY = graphql(`
+  query HighestRanking($limit: Int) {
+    mangas: highestRanking(limit: $limit) {
+      ...CardFields
+    }
+  }
+`)
+
+// Featured carousel (Board) — highest ranking, but with synopsis + tags.
+export const FEATURED_QUERY = graphql(`
+  query Featured($limit: Int) {
+    mangas: highestRanking(limit: $limit) {
+      ...DetailFields
+    }
+  }
+`)
+
+export const MANGA_BY_ID_QUERY = graphql(`
+  query Manga($id: ID!) {
+    manga(id: $id) {
+      ...DetailFields
+    }
+  }
+`)
+
+// Genre rows on the home screen. Filters by MangaDex tag ids (includedTags[]).
+export const MANGAS_BY_TAG_QUERY = graphql(`
+  query MangasByTag($includedTags: [ID!]!, $limit: Int) {
+    mangas: mangasByTag(includedTags: $includedTags, limit: $limit) {
+      ...CardFields
+    }
+  }
+`)
+
+// Explore search — title match.
+export const MANGAS_BY_NAME_QUERY = graphql(`
+  query MangasByName($mangaName: String, $limit: Int) {
+    mangas: mangasByName(mangaName: $mangaName, limit: $limit) {
+      ...CardFields
+    }
+  }
+`)
+
+export const CHAPTERS_QUERY = graphql(`
+  query Chapters($mangaId: ID!, $limit: Int, $offset: Int) {
+    chapters(mangaId: $mangaId, limit: $limit, offset: $offset) {
+      total
+      limit
+      offset
+      items {
+        id
+        attributes {
+          chapter
+          title
+          translatedLanguage
+        }
+        relationships {
+          type
+          attributes {
+            ... on ScanlationGroupAttributes {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`)
+
+export const CHAPTER_IMGS_QUERY = graphql(`
+  query ChapterImgs($chapterId: ID!) {
+    chapterImgs(chapterId: $chapterId)
+  }
+`)
+
+export const CHAPTER = graphql(`
+  fragment ChapterFields on Chapter {
+    id
+    attributes {
+      chapter
+      title
+      translatedLanguage
+    }
+    relationships {
+      type
+      attributes {
+        ... on ScanlationGroupAttributes {
+          name
+        }
+      }
+    }
+  }
+`)
