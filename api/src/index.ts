@@ -3,7 +3,12 @@ import { startStandaloneServer } from '@apollo/server/standalone'
 import { schema } from './schemas'
 
 const server = new ApolloServer({
-  schema
+  schema,
+  // Apollo disables introspection when NODE_ENV=production. We keep it on so
+  // the reader-app's GraphQL codegen can introspect the deployed schema over
+  // HTTP. Low risk here: the server is a read-only proxy over the public
+  // MangaDex API and exposes no privileged operations.
+  introspection: true
 })
 
 const { url } = await startStandaloneServer(server, {
