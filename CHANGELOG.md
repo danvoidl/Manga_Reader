@@ -1,3 +1,10 @@
+# [1.2.0-beta.2](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.1...v1.2.0-beta.2) (2026-08-07)
+
+
+### Features
+
+* **api:** enable GraphQL introspection in production ([12f0498](https://github.com/danvoidl/Manga_Reader/commit/12f0498da22d30fb28cbc7e4fd5333d7207a5966))
+
 # [1.2.0-beta.1](https://github.com/danvoidl/Manga_Reader/compare/v1.1.0...v1.2.0-beta.1) (2026-08-07)
 
 
