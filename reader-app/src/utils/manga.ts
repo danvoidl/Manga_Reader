@@ -66,7 +66,8 @@ export function toMangaDetail(
     name: pickTitle(manga.attributes),
     cover: manga.cover ?? undefined,
     description: pickDescription(manga.attributes),
-    tags: pickTags(manga.attributes)
+    tags: pickTags(manga.attributes),
+    contentRating: manga.attributes?.contentRating || ''
   }
 }
 
@@ -88,7 +89,7 @@ export function toChapterRows(items: MangaChapter[]) {
       number: chapter.attributes?.chapter ?? '',
       name: chapter.attributes?.title ?? '',
       scan: scan ?? 'Scan desconhecida',
-      lang: chapter.attributes?.translatedLanguage ?? ''
+      lang: chapter.attributes?.translatedLanguage ?? '',
     }
   })
 }

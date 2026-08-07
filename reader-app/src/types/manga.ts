@@ -17,6 +17,7 @@ export interface MangaDetail {
   cover?: string;
   description: string;
   tags: string[];
+  contentRating: string
 }
 
 // A single chapter row (no image): number + title, scan group, language.

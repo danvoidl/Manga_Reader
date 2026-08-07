@@ -1,12 +1,26 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
+// The codegen CLI does not load `.env` on its own, so pull it in here (Node's
+// built-in loader — no dependency). Ignored if the file is absent (e.g. CI,
+// where the vars come from the real environment).
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file — rely on the ambient environment
+}
+
 // Generates typed GraphQL documents into src/gql/. Run with `bun run codegen`
-// while the api/ dev server is up (it introspects the schema over HTTP).
+// — it introspects the schema over HTTP.
 //
-// Schema source: the local Apollo server. Override with CODEGEN_SCHEMA_URL if
-// your API runs elsewhere.
+// Schema source resolution order:
+//   1. CODEGEN_SCHEMA_URL — explicit override, just for codegen
+//   2. EXPO_PUBLIC_API_URL — same remote the app talks to (single source of truth)
+//   3. http://localhost:4000 — the local Apollo dev server
 const config: CodegenConfig = {
-  schema: process.env.CODEGEN_SCHEMA_URL ?? "http://localhost:4000",
+  schema:
+    process.env.CODEGEN_SCHEMA_URL ??
+    process.env.EXPO_PUBLIC_API_URL ??
+    "http://localhost:4000",
   documents: ["src/**/*.{ts,tsx}"],
   // No graphql() calls yet in a file is fine — don't fail the run.
   ignoreNoDocuments: true,

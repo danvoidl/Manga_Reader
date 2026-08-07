@@ -8,6 +8,7 @@ const CARD_FIELDS = graphql(`
     id
     cover: coverUrl(size: 512)
     attributes {
+      contentRating
       title {
         en
         pt_br
@@ -27,6 +28,7 @@ const DETAIL_FIELDS = graphql(`
     id
     cover: coverUrl(size: 512)
     attributes {
+      contentRating
       title {
         en
         pt_br
