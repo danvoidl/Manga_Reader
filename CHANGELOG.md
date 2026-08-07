@@ -1,3 +1,10 @@
+# [1.2.0-beta.3](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.2...v1.2.0-beta.3) (2026-08-07)
+
+
+### Features
+
+* **app-#6:** added priority and contentRating tag to the mangas ([fe26b5a](https://github.com/danvoidl/Manga_Reader/commit/fe26b5adf7f33afb99665f8e4b4ef53706e08ba4)), closes [app-#6](https://github.com/app-/issues/6)
+
 # [1.2.0-beta.2](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.1...v1.2.0-beta.2) (2026-08-07)
 
 
