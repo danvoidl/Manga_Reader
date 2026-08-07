@@ -1,0 +1,14 @@
+# [1.2.0-beta.1](https://github.com/danvoidl/Manga_Reader/compare/v1.1.0...v1.2.0-beta.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **#1:** solved return to last page in current reading ([1b65d4d](https://github.com/danvoidl/Manga_Reader/commit/1b65d4d2c9383f252feadf80cacb2c547fb3f627)), closes [#1](https://github.com/danvoidl/Manga_Reader/issues/1)
+* **api:** run api with tsx in production to resolve ESM/path-alias imports ([4ce5a1a](https://github.com/danvoidl/Manga_Reader/commit/4ce5a1a5b1b8758944446b224cc24e63a8729686))
+
+
+### Features
+
+* **#5:** added explore filter by genre and ordenation ([2aaf7b2](https://github.com/danvoidl/Manga_Reader/commit/2aaf7b21179cdfc32bc5bb341368df6a33dd2e38)), closes [#5](https://github.com/danvoidl/Manga_Reader/issues/5)
+* **api-#8:** added schema for next chapter ([276478a](https://github.com/danvoidl/Manga_Reader/commit/276478a1194c51fd9bce35a2c4f3f222da5fc8dd)), closes [api-#8](https://github.com/api-/issues/8)
+* **app-#8:** read next chapter ([5722748](https://github.com/danvoidl/Manga_Reader/commit/5722748ac94fb65f69bce5df8aad6d3b257af3c4)), closes [app-#8](https://github.com/app-/issues/8)
