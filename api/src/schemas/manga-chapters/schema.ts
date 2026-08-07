@@ -63,6 +63,14 @@ export const mangaChaptersTypeDefs = /* GraphQL */ `
     relationships: [ChapterRelationship]
   }
 
+  "Sort direction for the chapter list, by chapter number."
+  enum ChapterOrder {
+    "First chapter to latest."
+    asc
+    "Latest chapter to first."
+    desc
+  }
+
   "A page of chapters (deduped to one row per chapter number, best western language)."
   type ChapterPage {
     items: [Chapter!]!
@@ -80,7 +88,7 @@ export const mangaChaptersTypeDefs = /* GraphQL */ `
   }
 
   type Query {
-    chapters(mangaId: ID!, limit: Int = 10, offset: Int = 0): ChapterPage!
+    chapters(mangaId: ID!, limit: Int = 10, offset: Int = 0, order: ChapterOrder = desc): ChapterPage!
     chapterImgs(chapterId: ID!): [String!]!
     adjacentChapters(mangaId: ID!, chapterId: ID!): AdjacentChapters!
   }

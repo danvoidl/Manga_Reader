@@ -7,6 +7,7 @@ interface QueryArgs {
   chapterId: string
   limit: number
   offset: number
+  order: 'asc' | 'desc'
 }
 
 export const mangaChaptersResolver = {
@@ -14,6 +15,7 @@ export const mangaChaptersResolver = {
     chapters: async (parent: unknown, args: QueryArgs) => {
       const limit = args.limit ?? 10
       const offset = args.offset ?? 0
+      const order = args.order ?? 'desc'
 
       const [error, resp] = await modules.manga.getMangaChapters(
         args.mangaId,
@@ -22,10 +24,13 @@ export const mangaChaptersResolver = {
 
       if (error) return { items: [], total: 0, limit, offset }
 
+      // dedupeByBestLanguage returns the list descending (latest first);
+      // reverse it for ascending (first chapter to latest) before slicing.
       const deduped = dedupeByBestLanguage(resp.data)
+      const ordered = order === 'asc' ? [...deduped].reverse() : deduped
 
       return {
-        items: deduped.slice(offset, offset + limit),
+        items: ordered.slice(offset, offset + limit),
         total: deduped.length,
         limit,
         offset
