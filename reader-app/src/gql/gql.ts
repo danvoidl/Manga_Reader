@@ -26,6 +26,7 @@ type Documents = {
     "\n  query ExploreMangas(\n    $title: String\n    $order: [MangaOrderInput!]\n    $includedTags: [ID!]\n    $limit: Int\n  ) {\n    mangas: exploreMangas(\n      title: $title\n      order: $order\n      includedTags: $includedTags\n      limit: $limit\n    ) {\n      ...CardFields\n    }\n  }\n": typeof types.ExploreMangasDocument,
     "\n  query Chapters($mangaId: ID!, $limit: Int, $offset: Int) {\n    chapters(mangaId: $mangaId, limit: $limit, offset: $offset) {\n      total\n      limit\n      offset\n      items {\n        id\n        attributes {\n          chapter\n          title\n          translatedLanguage\n        }\n        relationships {\n          type\n          attributes {\n            ... on ScanlationGroupAttributes {\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n": typeof types.ChaptersDocument,
     "\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n": typeof types.ChapterImgsDocument,
+    "\n  query AdjacentChapters($mangaId: ID!, $chapterId: ID!) {\n    adjacentChapters(mangaId: $mangaId, chapterId: $chapterId) {\n      next {\n        ...ChapterFields\n      }\n      prev {\n        ...ChapterFields\n      }\n    }\n  }\n": typeof types.AdjacentChaptersDocument,
     "\n  fragment ChapterFields on Chapter {\n    id\n    attributes {\n      chapter\n      title\n      translatedLanguage\n    }\n    relationships {\n      type\n      attributes {\n        ... on ScanlationGroupAttributes {\n          name\n        }\n      }\n    }\n  }\n": typeof types.ChapterFieldsFragmentDoc,
     "\n  query Categories {\n    categories {\n      id\n      attributes {\n        name {\n          en\n          pt_br\n        }\n        group\n      }\n    }\n  }\n": typeof types.CategoriesDocument,
 };
@@ -42,6 +43,7 @@ const documents: Documents = {
     "\n  query ExploreMangas(\n    $title: String\n    $order: [MangaOrderInput!]\n    $includedTags: [ID!]\n    $limit: Int\n  ) {\n    mangas: exploreMangas(\n      title: $title\n      order: $order\n      includedTags: $includedTags\n      limit: $limit\n    ) {\n      ...CardFields\n    }\n  }\n": types.ExploreMangasDocument,
     "\n  query Chapters($mangaId: ID!, $limit: Int, $offset: Int) {\n    chapters(mangaId: $mangaId, limit: $limit, offset: $offset) {\n      total\n      limit\n      offset\n      items {\n        id\n        attributes {\n          chapter\n          title\n          translatedLanguage\n        }\n        relationships {\n          type\n          attributes {\n            ... on ScanlationGroupAttributes {\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n": types.ChaptersDocument,
     "\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n": types.ChapterImgsDocument,
+    "\n  query AdjacentChapters($mangaId: ID!, $chapterId: ID!) {\n    adjacentChapters(mangaId: $mangaId, chapterId: $chapterId) {\n      next {\n        ...ChapterFields\n      }\n      prev {\n        ...ChapterFields\n      }\n    }\n  }\n": types.AdjacentChaptersDocument,
     "\n  fragment ChapterFields on Chapter {\n    id\n    attributes {\n      chapter\n      title\n      translatedLanguage\n    }\n    relationships {\n      type\n      attributes {\n        ... on ScanlationGroupAttributes {\n          name\n        }\n      }\n    }\n  }\n": types.ChapterFieldsFragmentDoc,
     "\n  query Categories {\n    categories {\n      id\n      attributes {\n        name {\n          en\n          pt_br\n        }\n        group\n      }\n    }\n  }\n": types.CategoriesDocument,
 };
@@ -108,6 +110,10 @@ export function graphql(source: "\n  query Chapters($mangaId: ID!, $limit: Int, 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n"): (typeof documents)["\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query AdjacentChapters($mangaId: ID!, $chapterId: ID!) {\n    adjacentChapters(mangaId: $mangaId, chapterId: $chapterId) {\n      next {\n        ...ChapterFields\n      }\n      prev {\n        ...ChapterFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query AdjacentChapters($mangaId: ID!, $chapterId: ID!) {\n    adjacentChapters(mangaId: $mangaId, chapterId: $chapterId) {\n      next {\n        ...ChapterFields\n      }\n      prev {\n        ...ChapterFields\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

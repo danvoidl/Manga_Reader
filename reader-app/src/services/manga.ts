@@ -161,6 +161,19 @@ export const CHAPTER_IMGS_QUERY = graphql(`
   }
 `)
 
+export const ADJACENT_CHAPTERS_QUERY = graphql(`
+  query AdjacentChapters($mangaId: ID!, $chapterId: ID!) {
+    adjacentChapters(mangaId: $mangaId, chapterId: $chapterId) {
+      next {
+        ...ChapterFields
+      }
+      prev {
+        ...ChapterFields
+      }
+    }
+  }
+`)
+
 export const CHAPTER = graphql(`
   fragment ChapterFields on Chapter {
     id

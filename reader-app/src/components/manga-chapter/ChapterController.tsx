@@ -5,12 +5,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChoosePageModal } from "./ChoosePageModal";
 import { useChapterControl } from "@/store/ChapterControlContext";
 import { ChapterAnimatedContainer } from "./ChapterAnimatedContainer";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+import { useBackToManga } from "@/hooks/useBackToManga";
 
 export function ChapterController() {
   const { totalPages, currentPage, handleSlide } = useChapterControl();
   const insets = useSafeAreaInsets();
-  const router = useRouter();
+  const backToManga = useBackToManga();
   const { title, subtitle } = useLocalSearchParams<{
     title?: string;
     subtitle?: string;
@@ -23,7 +24,7 @@ export function ChapterController() {
         style={{ paddingTop: insets.top + 10 }}
       >
         <View className="flex-row gap-4 items-center">
-          <Pressable onPress={() => router.back()}>
+          <Pressable onPress={backToManga}>
             <Icon name={"arrow-left"} color={"#ad89ff"} size={26} />
           </Pressable>
           

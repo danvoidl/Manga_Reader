@@ -1,30 +1,41 @@
 import { ZoomArea } from "@/components/zoom/ZoomArea";
 import { useSystemBars } from "@/store/SystemBarsContext";
-import { useWindowDimensions, ViewToken } from "react-native";
+import { useWindowDimensions, View, ViewToken } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import { useChapterControl } from "@/store/ChapterControlContext";
-import { useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 
-export function Chapters() {
+interface Props {
+  endSlide?: ReactNode;
+}
+
+export function Chapters({ endSlide }: Props) {
   const { toggleBars } = useSystemBars();
   const { pages, chapterListRef, handlePageChange, initialPage } =
     useChapterControl();
   const { width } = useWindowDimensions();
 
+  // Append a sentinel after the last page so the inverted list can render a
+  // dedicated end-of-chapter slide once the reader swipes past the final page.
+  const data = endSlide ? [...pages, "__end_slide__"] : pages;
+
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       const firstViewableIndex = viewableItems?.[0]?.index ?? null;
 
-      if (firstViewableIndex !== null) handlePageChange(firstViewableIndex);
+      // Ignore the end slide (index === pages.length) so the page counter and
+      // slider stay pinned to the last real page.
+      if (firstViewableIndex !== null && firstViewableIndex < pages.length)
+        handlePageChange(firstViewableIndex);
     },
-    [handlePageChange]
+    [handlePageChange, pages.length]
   );
 
   return (
     <ZoomArea toggleBars={toggleBars}>
       <FlatList
-        data={pages}
+        data={data}
         horizontal
         keyExtractor={(_, index) => index.toString()}
         pagingEnabled
@@ -38,15 +49,19 @@ export function Chapters() {
           offset: width * index,
           index,
         })}
-        renderItem={({ item }) => (
-          <Image
-            style={{ flex: 1, width }}
-            source={item}
-            contentFit="contain"
-            transition={1000}
-            contentPosition={"center"}
-          />
-        )}
+        renderItem={({ item, index }) =>
+          index < pages.length ? (
+            <Image
+              style={{ flex: 1, width }}
+              source={item}
+              contentFit="contain"
+              transition={1000}
+              contentPosition={"center"}
+            />
+          ) : (
+            <View style={{ width }}>{endSlide}</View>
+          )
+        }
         viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
         onViewableItemsChanged={onViewableItemsChanged}
       />

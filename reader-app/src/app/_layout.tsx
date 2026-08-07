@@ -22,7 +22,14 @@ export default function RootLayout() {
                   headerShown: false,
                   contentStyle: { backgroundColor: "#262626" },
                 }}
-              />
+              >
+                {/* Reader owns its own "back" (always returns to the manga
+                    page), so the iOS swipe-back gesture is disabled here. */}
+                <Stack.Screen
+                  name="manga-chapter"
+                  options={{ gestureEnabled: false }}
+                />
+              </Stack>
             </ContinueReadingProvider>
           </AuthProvider>
         </KeyboardProvider>
