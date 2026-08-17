@@ -4,18 +4,41 @@ import Slider from "@react-native-community/slider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChoosePageModal } from "./ChoosePageModal";
 import { useChapterControl } from "@/store/ChapterControlContext";
+import { useBookshelf } from "@/store/BookshelfContext";
 import { ChapterAnimatedContainer } from "./ChapterAnimatedContainer";
 import { useLocalSearchParams } from "expo-router";
 import { useBackToManga } from "@/hooks/useBackToManga";
 
 export function ChapterController() {
-  const { totalPages, currentPage, handleSlide } = useChapterControl();
+  const { totalPages, currentPage, handleSlide, pages } = useChapterControl();
+  const { isPageBookmarked, togglePageBookmark } = useBookshelf();
   const insets = useSafeAreaInsets();
   const backToManga = useBackToManga();
-  const { title, subtitle } = useLocalSearchParams<{
-    title?: string;
-    subtitle?: string;
-  }>();
+  const { id, title, subtitle, mangaId, mangaName, chapterNumber } =
+    useLocalSearchParams<{
+      id?: string;
+      title?: string;
+      subtitle?: string;
+      mangaId?: string;
+      mangaName?: string;
+      chapterNumber?: string;
+    }>();
+
+  const bookmarked = !!id && isPageBookmarked(id, currentPage);
+
+  function handleToggleBookmark() {
+    if (!id) return;
+
+    togglePageBookmark({
+      mangaId: mangaId ?? "",
+      mangaName: mangaName ?? "",
+      chapterId: id,
+      chapterNumber: chapterNumber ?? "",
+      chapterName: subtitle ?? "",
+      pageIndex: currentPage,
+      image: pages[currentPage]
+    });
+  }
 
   return (
     <ChapterAnimatedContainer>
@@ -57,6 +80,14 @@ export function ChapterController() {
         style={{ paddingBottom: insets.bottom + 20 }}
       >
         <ChoosePageModal />
+
+        <Pressable onPress={handleToggleBookmark} className="ml-3">
+          <Icon
+            name={bookmarked ? "bookmark" : "bookmark-outline"}
+            size={28}
+            color="#AD89FF"
+          />
+        </Pressable>
 
         <View className="flex-1 ">
           <Slider

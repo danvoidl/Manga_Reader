@@ -1,6 +1,7 @@
 import { View, useWindowDimensions } from 'react-native'
 import Banner from '../home/Banner'
 import MangaInfo from '../manga/Info'
+import { BookshelfStatusButton } from './BookshelfStatusButton'
 import type { MangaDetail } from '@/types/manga'
 
 interface Props {
@@ -19,6 +20,7 @@ export function MangaPageBanner({ manga }: Props) {
     <View className="relative" style={{ minHeight: height * 0.6 }}>
       <Banner cover={manga.cover ?? ''} />
       <MangaInfo manga={manga} resume />
+      <BookshelfStatusButton manga={manga} />
     </View>
   )
 }

@@ -49,6 +49,19 @@ export default function TabsLayout() {
           )
         }}
       />
+      <Tabs.Screen
+        name="bookshelf"
+        options={{
+          title: 'Estante',
+          tabBarIcon: ({ color, size, focused }) => (
+            <SymbolView
+              name={{ ios: 'books.vertical', android: 'book' }}
+              tintColor={color}
+              size={size}
+            />
+          )
+        }}
+      />
     </Tabs>
   )
 }
