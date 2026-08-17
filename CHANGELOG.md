@@ -1,3 +1,10 @@
+# [1.2.0-beta.5](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.4...v1.2.0-beta.5) (2026-08-17)
+
+
+### Features
+
+* **app-#10:** add Estante tab with reading-status marking and page bookmarks ([b826799](https://github.com/danvoidl/Manga_Reader/commit/b826799afffd2f8dedf0da9e41b2e7111f243bb1)), closes [app-#10](https://github.com/app-/issues/10)
+
 # [1.2.0-beta.4](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2026-08-17)
 
 
