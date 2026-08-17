@@ -11,7 +11,8 @@ class PostModule extends FetchFactory<any> {
     mangaName = '',
     limit = 96,
     order: MangaOrder = { followedCount: 'desc' },
-    includedTags: string[] = []
+    includedTags: string[] = [],
+    createdAtSince = ''
   ): Promise<ApiResp<ListSuccess<Manga[]>>> {
     let query = {
       'includes[]': ['cover_art', 'author'],
@@ -27,12 +28,51 @@ class PostModule extends FetchFactory<any> {
 
     if (mangaName) query['title'] = mangaName
     if (includedTags.length) query['includedTags[]'] = includedTags
+    // MangaDex expects createdAtSince as YYYY-MM-DDTHH:MM:SS (no ms / timezone).
+    if (createdAtSince) query['createdAtSince'] = createdAtSince
 
     return this.call({
       method: 'GET',
       url: '/manga',
       fetchOptions: {
         query
+      }
+    })
+  }
+
+  // Look up specific manga by id (with cover_art) — used to resolve covers for
+  // the global latest-chapters feed, whose manga relationships carry no cover.
+  async getMangasByIds(
+    ids: string[]
+  ): Promise<ApiResp<ListSuccess<Manga[]>>> {
+    return this.call({
+      method: 'GET',
+      url: '/manga',
+      fetchOptions: {
+        query: {
+          'ids[]': ids,
+          'includes[]': ['cover_art'],
+          limit: 100
+        }
+      }
+    })
+  }
+
+  // Global latest chapter uploads across all manga (order[readableAt]=desc),
+  // no language filter — mirrors MangaDex's "Latest Updates" feed.
+  async getLatestChapters(
+    limit = 30
+  ): Promise<ApiResp<ListSuccess<Chapter[]>>> {
+    return this.call({
+      method: 'GET',
+      url: '/chapter',
+      fetchOptions: {
+        query: {
+          'includes[]': ['manga', 'scanlation_group'],
+          'contentRating[]': ['safe', 'suggestive'],
+          'order[readableAt]': 'desc',
+          limit
+        }
       }
     })
   }

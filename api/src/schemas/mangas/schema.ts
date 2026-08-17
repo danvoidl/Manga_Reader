@@ -107,6 +107,8 @@ export const mangaTypeDefs = `#graphql
     highestRanking(limit: Int): [Manga!]!
     "Most followed titles (order[followedCount]=desc)"
     mostPopular(limit: Int): [Manga!]!
+    "Recently added titles (last 30 days) ordered by rating desc"
+    topRatedRecent(limit: Int): [Manga!]!
     "All available MangaDex categories/tags (genres, themes, formats)"
     categories: [Tag!]!
     "Explore search: optional title + multiple sort criteria + included tag ids, all combined"

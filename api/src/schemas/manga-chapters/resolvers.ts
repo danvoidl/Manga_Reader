@@ -1,5 +1,6 @@
 import modules from '~/src/repository/api'
-import { RelationshipAttributes } from '~/src/types/manga-chapter'
+import { Chapter, RelationshipAttributes } from '~/src/types/manga-chapter'
+import { Manga } from '~/src/types/manga'
 import { dedupeByBestLanguage, LANG_PRIORITY } from './utils'
 
 interface QueryArgs {
@@ -8,6 +9,15 @@ interface QueryArgs {
   limit: number
   offset: number
   order: 'asc' | 'desc'
+}
+
+interface LatestChaptersArgs {
+  limit: number
+}
+
+// Id of the manga a chapter belongs to (from its `manga` relationship).
+function mangaRelId(chapter: Chapter): string | undefined {
+  return chapter.relationships.find((rel) => rel.type === 'manga')?.id
 }
 
 export const mangaChaptersResolver = {
@@ -70,6 +80,66 @@ export const mangaChaptersResolver = {
       )
 
       return data
+    },
+
+    // Global "Latest Updates" feed: one card per chapter (not deduped), each
+    // carrying its manga. The chapter's manga relationship has no cover, so we
+    // batch-fetch the manga by id (with cover_art) and attach the real node —
+    // the Manga.coverUrl field resolver then builds the URL.
+    latestChapters: async (parent: unknown, args: LatestChaptersArgs) => {
+      const [error, resp] = await modules.manga.getLatestChapters(args.limit)
+
+      if (error) return []
+
+      const chapters = resp.data
+
+      const mangaIds = [
+        ...new Set(
+          chapters
+            .map((chapter) => mangaRelId(chapter))
+            .filter((id): id is string => Boolean(id))
+        )
+      ]
+
+      const [mangaError, mangaResp] =
+        await modules.manga.getMangasByIds(mangaIds)
+
+      if (mangaError) return []
+
+      const mangaById = new Map<string, Manga>(
+        mangaResp.data.map((manga) => [manga.id, manga])
+      )
+
+      return chapters.reduce<
+        {
+          id: string
+          chapter: string
+          title: string
+          translatedLanguage: string
+          groupName: string | null
+          manga: Manga
+        }[]
+      >((acc, chapter) => {
+        const manga = mangaById.get(mangaRelId(chapter) ?? '')
+
+        if (!manga) return acc
+
+        const group = chapter.relationships.find(
+          (rel) => rel.type === 'scanlation_group'
+        )
+
+        acc.push({
+          id: chapter.id,
+          chapter: chapter.attributes.chapter,
+          title: chapter.attributes.title,
+          translatedLanguage: chapter.attributes.translatedLanguage,
+          groupName:
+            (group?.attributes as { name?: string } | undefined)?.name ?? null,
+          manga
+        })
+
+        return acc
+      }, [])
     }
   },
 

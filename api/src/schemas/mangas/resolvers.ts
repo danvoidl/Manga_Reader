@@ -35,13 +35,15 @@ const DEFAULT_LIMIT = 96
 async function fetchMangas(
   order: Record<string, SortOrder>,
   limit = DEFAULT_LIMIT,
-  includedTags: string[] = []
+  includedTags: string[] = [],
+  createdAtSince = ''
 ) {
   const [error, resp] = await modules.manga.getManga(
     '',
     limit,
     order,
-    includedTags
+    includedTags,
+    createdAtSince
   )
 
   if (error) return []
@@ -77,6 +79,14 @@ export const mangaResolvers = {
       fetchMangas({ followedCount: 'desc' }, args.limit),
     highestRanking: async (parent: unknown, args: ListArgs) =>
       fetchMangas({ rating: 'desc' }, args.limit),
+    // Recently added (last 30 days) ordered by rating — powers the home banner.
+    topRatedRecent: async (parent: unknown, args: ListArgs) => {
+      const createdAtSince = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 19)
+
+      return fetchMangas({ rating: 'desc' }, args.limit, [], createdAtSince)
+    },
     mangasByTag: async (
       parent: unknown,
       args: { includedTags: string[]; limit?: number }

@@ -87,9 +87,21 @@ export const mangaChaptersTypeDefs = /* GraphQL */ `
     prev: Chapter
   }
 
+  "A recently uploaded chapter from the global feed, with its manga (cover resolved server-side)."
+  type LatestChapter {
+    id: ID!
+    chapter: String
+    title: String
+    translatedLanguage: String
+    groupName: String
+    manga: Manga!
+  }
+
   type Query {
     chapters(mangaId: ID!, limit: Int = 10, offset: Int = 0, order: ChapterOrder = desc): ChapterPage!
     chapterImgs(chapterId: ID!): [String!]!
     adjacentChapters(mangaId: ID!, chapterId: ID!): AdjacentChapters!
+    "Global latest chapter uploads (order[readableAt]=desc), across all languages."
+    latestChapters(limit: Int = 30): [LatestChapter!]!
   }
 `
