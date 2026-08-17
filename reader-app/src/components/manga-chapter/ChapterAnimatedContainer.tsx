@@ -23,6 +23,11 @@ export function ChapterAnimatedContainer({ children }: GenericComponentProps) {
 
   return (
     <Animated.View
+      // When the bars are hidden the overlay must let every touch fall through
+      // to the reader below (scroll + tap-to-toggle); when visible, "box-none"
+      // keeps the layer itself transparent to touches while the real controls
+      // (buttons, slider) stay interactive.
+      pointerEvents={isSystemBarsVisible ? "box-none" : "none"}
       className="absolute inset-0 justify-between items-center"
       style={[animatedStyle]}
     >

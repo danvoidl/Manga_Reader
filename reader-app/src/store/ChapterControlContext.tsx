@@ -1,9 +1,12 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
+import type { ReadingMode } from "./ReadingModeContext";
 
 interface Props {
   pages: string[];
   initialPage?: number;
+  mode: ReadingMode;
+  onChangeMode: (mode: ReadingMode) => void;
   children: React.ReactNode;
 }
 
@@ -15,6 +18,8 @@ interface CtxProps {
   initialPage: number;
   chapterListRef: React.RefObject<FlatList<any> | null>;
   handleSlide: (page: number, animated?: boolean) => void;
+  mode: ReadingMode;
+  setMode: (mode: ReadingMode) => void;
 }
 
 export const ChapterControlContext = createContext<CtxProps | undefined>(
@@ -37,6 +42,8 @@ export function ChapterControlProvider({
   children,
   pages,
   initialPage = 0,
+  mode,
+  onChangeMode,
 }: Props) {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const chapterListRef = useRef<FlatList>(null);
@@ -59,6 +66,8 @@ export function ChapterControlProvider({
         handlePageChange,
         chapterListRef,
         handleSlide,
+        mode,
+        setMode: onChangeMode,
       }}
     >
       {children}

@@ -41,6 +41,12 @@ function pickTags(attributes?: MangaWithDetail['attributes']): string[] {
     .filter((name): name is string => Boolean(name))
 }
 
+// MangaDex's "Long Strip" format tag — matched loosely (case/whitespace
+// insensitive) since only the display name survives into MangaDetail.tags.
+export function isLongStrip(tags: string[]): boolean {
+  return tags.some((tag) => tag.replace(/\s+/g, '').toLowerCase() === 'longstrip')
+}
+
 // Maps a GraphQL manga into the lean card shape, dropping entries with no cover.
 export function toMangaCovers(mangas: Manga[]): MangaCover[] {
   return mangas.reduce<MangaCover[]>((acc, manga) => {

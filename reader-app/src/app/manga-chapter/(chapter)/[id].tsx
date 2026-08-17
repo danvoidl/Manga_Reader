@@ -9,6 +9,8 @@ import { EndOfChapter } from '@/components/manga-chapter/EndOfChapter'
 import { ReadingTracker } from '@/components/manga-chapter/ReadingTracker'
 import { useChapterImgs } from '@/hooks/useChapterImgs'
 import { useBackToManga } from '@/hooks/useBackToManga'
+import { useMangaDetail } from '@/hooks/useMangaDetail'
+import { useReadingMode } from '@/hooks/useReadingMode'
 import AppText from '@/components/AppText'
 
 export default function MangaChapter() {
@@ -22,6 +24,8 @@ export default function MangaChapter() {
       page?: string
     }>()
   const { data: pages, loading, error } = useChapterImgs(id)
+  const { data: manga } = useMangaDetail(mangaId)
+  const { mode, setMode } = useReadingMode(mangaId, manga?.tags)
   const backToManga = useBackToManga()
 
   // Route the Android hardware back button through the same "always return to
@@ -63,6 +67,8 @@ export default function MangaChapter() {
           key={id}
           pages={pages}
           initialPage={Number(page) || 0}
+          mode={mode}
+          onChangeMode={setMode}
         >
           <Chapters
             endSlide={
