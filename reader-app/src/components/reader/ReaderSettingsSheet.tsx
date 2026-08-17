@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import { BottomSheet, Host, Column } from '@expo/ui'
 import AppText from '@/components/AppText'
 import { SelectableChip } from '@/components/explore/SelectableChip'
-import type { ReadingMode } from '@/store/ReadingModeContext'
+import type { ReadingMode } from '@/store/ReadingModeStore'
 
 interface Props {
   visible: boolean

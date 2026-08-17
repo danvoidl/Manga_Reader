@@ -3,7 +3,7 @@ import { Modal, Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Icon from '@react-native-vector-icons/material-design-icons'
 import AppText from '@/components/AppText'
-import { useBookshelf, type BookshelfStatus } from '@/store/BookshelfContext'
+import { useBookshelf, type BookshelfStatus } from '@/store/BookshelfStore'
 import type { MangaDetail } from '@/types/manga'
 
 interface Props {
@@ -25,10 +25,11 @@ const BUTTON_MARGIN = 16
 // how bright/busy the cover art is.
 export function BookshelfStatusButton({ manga }: Props) {
   const insets = useSafeAreaInsets()
-  const { getStatus, setStatus } = useBookshelf()
+  const current = useBookshelf(
+    (s) => s.entries.find((e) => e.mangaId === manga.id)?.status
+  )
+  const setStatus = useBookshelf((s) => s.setStatus)
   const [open, setOpen] = useState(false)
-
-  const current = getStatus(manga.id)
 
   function handleSelect(status: BookshelfStatus) {
     setStatus({ id: manga.id, name: manga.name, cover: manga.cover }, status)

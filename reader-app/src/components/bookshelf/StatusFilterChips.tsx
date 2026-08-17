@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import { SelectableChip } from '@/components/explore/SelectableChip'
-import type { BookshelfStatus } from '@/store/BookshelfContext'
+import type { BookshelfStatus } from '@/store/BookshelfStore'
 
 export type BookshelfFilter = BookshelfStatus | 'pages'
 

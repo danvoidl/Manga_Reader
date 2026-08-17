@@ -1,6 +1,6 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
-import type { ReadingMode } from "./ReadingModeContext";
+import type { ReadingMode } from "./ReadingModeStore";
 
 interface Props {
   pages: string[];

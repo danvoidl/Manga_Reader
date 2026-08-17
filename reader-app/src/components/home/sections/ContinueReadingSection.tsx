@@ -5,7 +5,7 @@ import AppText from "@/components/AppText";
 import {
   useContinueReading,
   type ContinueReadingEntry,
-} from "@/store/ContinueReadingContext";
+} from "@/store/ContinueReadingStore";
 
 function ContinueCard({ entry }: { entry: ContinueReadingEntry }) {
   const router = useRouter();
@@ -16,7 +16,7 @@ function ContinueCard({ entry }: { entry: ContinueReadingEntry }) {
       style={{ width: 132 }}
       onPress={() =>
         router.push({
-          pathname: "/manga-chapter/[id]",
+          pathname: "/manga/chapter/[id]",
           params: {
             id: entry.chapterId,
             title: label,
@@ -54,7 +54,7 @@ function ContinueCard({ entry }: { entry: ContinueReadingEntry }) {
 }
 
 export default function ContinueReadingSection() {
-  const { entries } = useContinueReading();
+  const entries = useContinueReading((s) => s.entries);
 
   if (entries.length === 0) return null;
 

@@ -10,7 +10,7 @@ export default function HomeBanner({ manga }: { manga: MangaDetail }) {
   return (
     <Pressable
       onPress={() =>
-        router.push({ pathname: '/manga-page', params: { id: manga.id } })
+        router.push({ pathname: '/manga/[id]', params: { id: manga.id } })
       }
     >
       <Banner cover={manga.cover ?? ''} />

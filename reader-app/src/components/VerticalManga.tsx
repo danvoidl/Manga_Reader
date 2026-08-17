@@ -25,7 +25,7 @@ export default function VerticalManga({
 
   function handlePress() {
     if (!mangaId) return;
-    router.push({ pathname: "/manga-page", params: { id: mangaId } });
+    router.push({ pathname: "/manga/[id]", params: { id: mangaId } });
   }
 
   return (

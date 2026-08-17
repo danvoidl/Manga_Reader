@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import AppText from '@/components/AppText'
 import { blurhash } from '@/constants/general'
-import { useBookshelf, type BookshelfEntry } from '@/store/BookshelfContext'
+import { useBookshelf, type BookshelfEntry } from '@/store/BookshelfStore'
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 export function BookshelfMangaCard({ item, width }: Props) {
   const router = useRouter()
-  const { removeEntry } = useBookshelf()
+  const removeEntry = useBookshelf((s) => s.removeEntry)
   const [confirmVisible, setConfirmVisible] = useState(false)
 
   return (
@@ -22,7 +22,7 @@ export function BookshelfMangaCard({ item, width }: Props) {
       <Pressable
         style={{ width }}
         onPress={() =>
-          router.push({ pathname: '/manga-page', params: { id: item.mangaId } })
+          router.push({ pathname: '/manga/[id]', params: { id: item.mangaId } })
         }
         onLongPress={() => setConfirmVisible(true)}
       >

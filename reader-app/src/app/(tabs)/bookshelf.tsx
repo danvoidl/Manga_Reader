@@ -7,11 +7,12 @@ import {
   StatusFilterChips,
   type BookshelfFilter
 } from '@/components/bookshelf/StatusFilterChips'
-import { useBookshelf } from '@/store/BookshelfContext'
+import { useBookshelf } from '@/store/BookshelfStore'
 
 export default function BookshelfScreen() {
   const [filter, setFilter] = useState<BookshelfFilter>('want-to-read')
-  const { entries, pageBookmarks } = useBookshelf()
+  const entries = useBookshelf((s) => s.entries)
+  const pageBookmarks = useBookshelf((s) => s.pageBookmarks)
 
   return (
     <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>

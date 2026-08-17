@@ -3,7 +3,7 @@ import { FlatList, Pressable, View } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import AppText from '@/components/AppText'
-import { useBookshelf, type PageBookmarkEntry } from '@/store/BookshelfContext'
+import { useBookshelf, type PageBookmarkEntry } from '@/store/BookshelfStore'
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 
 interface Props {
@@ -26,7 +26,7 @@ function chapterHeading(chapterNumber: string, chapterName: string) {
 
 function PageThumbnail({ entry }: { entry: PageBookmarkEntry }) {
   const router = useRouter()
-  const { removePageBookmark } = useBookshelf()
+  const removePageBookmark = useBookshelf((s) => s.removePageBookmark)
   const [confirmVisible, setConfirmVisible] = useState(false)
 
   return (
@@ -34,7 +34,7 @@ function PageThumbnail({ entry }: { entry: PageBookmarkEntry }) {
       <Pressable
         onPress={() =>
           router.push({
-            pathname: '/manga-chapter/[id]',
+            pathname: '/manga/chapter/[id]',
             params: {
               id: entry.chapterId,
               title: entry.chapterNumber ? `Cap. ${entry.chapterNumber}` : 'Oneshot',

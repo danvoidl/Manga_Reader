@@ -61,7 +61,7 @@ export function EndOfChapter({ mangaId, mangaName, chapterId }: Props) {
     const label = chapter.number ? `Cap. ${chapter.number}` : 'Oneshot'
 
     router.replace({
-      pathname: '/manga-chapter/[id]',
+      pathname: '/manga/chapter/[id]',
       params: {
         id: chapter.id,
         title: label,

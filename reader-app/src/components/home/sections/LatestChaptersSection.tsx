@@ -14,7 +14,7 @@ function LatestChapterCard({ row }: { row: LatestChapterRow }) {
       style={{ width: 128 }}
       onPress={() =>
         router.push({
-          pathname: '/manga-chapter/[id]',
+          pathname: '/manga/chapter/[id]',
           params: {
             id: row.chapterId,
             title: label,

@@ -1,6 +1,6 @@
 import { FlatList, useWindowDimensions, View } from 'react-native'
 import AppText from '@/components/AppText'
-import type { BookshelfEntry } from '@/store/BookshelfContext'
+import type { BookshelfEntry } from '@/store/BookshelfStore'
 import { BookshelfMangaCard } from './BookshelfMangaCard'
 
 interface Props {

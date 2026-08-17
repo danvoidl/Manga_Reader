@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChoosePageModal } from "./ChoosePageModal";
 import { ReaderSettingsSheet } from "./ReaderSettingsSheet";
 import { useChapterControl } from "@/store/ChapterControlContext";
-import { useBookshelf } from "@/store/BookshelfContext";
+import { useBookshelf } from "@/store/BookshelfStore";
 import { ChapterAnimatedContainer } from "./ChapterAnimatedContainer";
 import { useLocalSearchParams } from "expo-router";
 import { useBackToManga } from "@/hooks/useBackToManga";
@@ -14,7 +14,7 @@ import { useBackToManga } from "@/hooks/useBackToManga";
 export function ChapterController() {
   const { totalPages, currentPage, handleSlide, pages, mode, setMode } =
     useChapterControl();
-  const { isPageBookmarked, togglePageBookmark } = useBookshelf();
+  const togglePageBookmark = useBookshelf((s) => s.togglePageBookmark);
   const insets = useSafeAreaInsets();
   const backToManga = useBackToManga();
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -28,7 +28,13 @@ export function ChapterController() {
       chapterNumber?: string;
     }>();
 
-  const bookmarked = !!id && isPageBookmarked(id, currentPage);
+  const bookmarked = useBookshelf(
+    (s) =>
+      !!id &&
+      s.pageBookmarks.some(
+        (b) => b.chapterId === id && b.pageIndex === currentPage
+      )
+  );
 
   function handleToggleBookmark() {
     if (!id) return;

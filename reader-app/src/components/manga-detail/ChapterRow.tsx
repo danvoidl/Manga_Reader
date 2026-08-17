@@ -21,7 +21,7 @@ export function MangaPageChapter({ chapter, mangaId, mangaName }: Props) {
     <Pressable
       onPress={() =>
         router.push({
-          pathname: '/manga-chapter/[id]',
+          pathname: '/manga/chapter/[id]',
           params: {
             id: chapter.id,
             title: label,

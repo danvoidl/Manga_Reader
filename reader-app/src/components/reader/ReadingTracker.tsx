@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useChapterControl } from "@/store/ChapterControlContext";
-import { useContinueReading } from "@/store/ContinueReadingContext";
+import { useContinueReading } from "@/store/ContinueReadingStore";
 
 interface Props {
   mangaId?: string;
@@ -21,7 +21,8 @@ export function ReadingTracker({
   chapterName,
 }: Props) {
   const { pages, currentPage, totalPages } = useChapterControl();
-  const { recordOpen, updateProgress } = useContinueReading();
+  const recordOpen = useContinueReading((s) => s.recordOpen);
+  const updateProgress = useContinueReading((s) => s.updateProgress);
 
   // Keep the latest page/progress for the unmount write without re-running effects.
   const pageRef = useRef(0);

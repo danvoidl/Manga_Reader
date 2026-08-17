@@ -16,7 +16,7 @@ export function ExploreGridCard({ item, width }: Props) {
       style={{ width }}
       onPress={() =>
         item.id &&
-        router.push({ pathname: '/manga-page', params: { id: item.id } })
+        router.push({ pathname: '/manga/[id]', params: { id: item.id } })
       }
     >
       <Image
