@@ -1,3 +1,10 @@
+# [1.2.0-beta.8](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.7...v1.2.0-beta.8) (2026-08-17)
+
+
+### Features
+
+* **app:** home com banner de recém-avaliados, últimos capítulos e recentemente adicionados ([0c58026](https://github.com/danvoidl/Manga_Reader/commit/0c58026d3d9460ac320c5d798784c8be3e86cbe1))
+
 # [1.2.0-beta.7](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.6...v1.2.0-beta.7) (2026-08-17)
 
 
