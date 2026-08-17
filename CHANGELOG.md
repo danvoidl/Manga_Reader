@@ -1,3 +1,10 @@
+# [1.2.0-beta.6](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.5...v1.2.0-beta.6) (2026-08-17)
+
+
+### Features
+
+* **app-#2:** add horizontal/vertical reading modes with reader settings ([e09153d](https://github.com/danvoidl/Manga_Reader/commit/e09153d828f577a2ee8ff9f5c2005e9e91c1275b)), closes [app-#2](https://github.com/app-/issues/2)
+
 # [1.2.0-beta.5](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.4...v1.2.0-beta.5) (2026-08-17)
 
 
