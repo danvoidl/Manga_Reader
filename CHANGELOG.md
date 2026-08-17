@@ -1,3 +1,10 @@
+# [1.2.0-beta.7](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.6...v1.2.0-beta.7) (2026-08-17)
+
+
+### Features
+
+* changes in home ([226e6b0](https://github.com/danvoidl/Manga_Reader/commit/226e6b0f52984018c8dbe5f97cd687acd82400be))
+
 # [1.2.0-beta.6](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.5...v1.2.0-beta.6) (2026-08-17)
 
 
