@@ -1,3 +1,10 @@
+# [1.2.0-beta.4](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2026-08-17)
+
+
+### Features
+
+* **app-#9:** paginated chapter list with order toggle ([e8e2e96](https://github.com/danvoidl/Manga_Reader/commit/e8e2e96c72ee9af96eca65612b9c6c2ad81597cd)), closes [app-#9](https://github.com/app-/issues/9)
+
 # [1.2.0-beta.3](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.2...v1.2.0-beta.3) (2026-08-07)
 
 
