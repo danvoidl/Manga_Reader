@@ -86,6 +86,15 @@ export const MOST_POPULAR_QUERY = graphql(`
   }
 `)
 
+// Home banner — recently added titles (last 30 days) ordered by rating.
+export const TOP_RATED_RECENT_QUERY = graphql(`
+  query TopRatedRecent($limit: Int) {
+    mangas: topRatedRecent(limit: $limit) {
+      ...DetailFields
+    }
+  }
+`)
+
 export const MANGA_BY_ID_QUERY = graphql(`
   query Manga($id: ID!) {
     manga(id: $id) {
@@ -160,6 +169,22 @@ export const CHAPTERS_QUERY = graphql(`
 export const CHAPTER_IMGS_QUERY = graphql(`
   query ChapterImgs($chapterId: ID!) {
     chapterImgs(chapterId: $chapterId)
+  }
+`)
+
+// Home "Últimos capítulos adicionados" — global latest chapter uploads, each
+// with its manga (CardFields) so we get the cover + title for the card.
+export const LATEST_CHAPTERS_QUERY = graphql(`
+  query LatestChapters($limit: Int) {
+    latestChapters(limit: $limit) {
+      id
+      chapter
+      title
+      groupName
+      manga {
+        ...CardFields
+      }
+    }
   }
 `)
 

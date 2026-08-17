@@ -1,10 +1,20 @@
 import {
+  LatestChapterRow,
   Manga,
   MangaChapter,
   MangaCover,
   MangaDetail,
   MangaWithDetail
 } from '@/types/manga'
+
+// A single entry from the LatestChapters query (chapter fields + its manga card).
+interface LatestChapterItem {
+  id: string
+  chapter?: string | null
+  title?: string | null
+  groupName?: string | null
+  manga: Manga
+}
 
 function firstValue(
   loc?: Record<string, string | null | undefined> | null
@@ -13,7 +23,7 @@ function firstValue(
   return Object.values(loc).find((value): value is string => Boolean(value))
 }
 
-function pickTitle(attributes?: Manga['attributes']): string {
+export function pickTitle(attributes?: Manga['attributes']): string {
   const title = attributes?.title
   const altTitles = attributes?.altTitles ?? []
 
@@ -82,6 +92,28 @@ export function toMangaBanners(mangas: MangaWithDetail[]): MangaDetail[] {
   return mangas
     .map(toMangaDetail)
     .filter((manga): manga is MangaDetail => Boolean(manga && manga.cover))
+}
+
+// Maps the LatestChapters query into home-carousel cards, dropping entries
+// whose manga has no cover (nothing to show).
+export function toLatestChapterRows(
+  items: LatestChapterItem[]
+): LatestChapterRow[] {
+  return items.reduce<LatestChapterRow[]>((acc, item) => {
+    if (item.manga?.cover) {
+      acc.push({
+        chapterId: item.id,
+        number: item.chapter ?? '',
+        title: item.title ?? '',
+        group: item.groupName ?? 'Scan desconhecida',
+        mangaId: item.manga.id,
+        mangaName: pickTitle(item.manga.attributes),
+        cover: item.manga.cover
+      })
+    }
+
+    return acc
+  }, [])
 }
 
 export function toChapterRows(items: MangaChapter[]) {

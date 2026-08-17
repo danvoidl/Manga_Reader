@@ -29,6 +29,18 @@ export interface ChapterRow {
   lang: string;
 }
 
+// A card in the home "Últimos capítulos adicionados" carousel: manga cover +
+// chapter number + scan group, linking straight to the reader.
+export interface LatestChapterRow {
+  chapterId: string;
+  number: string;
+  title: string;
+  group: string;
+  mangaId: string;
+  mangaName: string;
+  cover: string;
+}
+
 // ---- GraphQL response shapes ----------------------------------------------
 
 export type Manga = CardFieldsFragment

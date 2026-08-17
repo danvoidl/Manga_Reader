@@ -7,7 +7,7 @@ export default function RecentlyAdded() {
 
   return (
     <MangaSection
-      title="Recently Added"
+      title="Recentemente adicionados"
       data={data}
       loading={loading}
       error={error}
