@@ -132,8 +132,8 @@ export const EXPLORE_MANGAS_QUERY = graphql(`
 `)
 
 export const CHAPTERS_QUERY = graphql(`
-  query Chapters($mangaId: ID!, $limit: Int, $offset: Int) {
-    chapters(mangaId: $mangaId, limit: $limit, offset: $offset) {
+  query Chapters($mangaId: ID!, $limit: Int, $offset: Int, $order: ChapterOrder) {
+    chapters(mangaId: $mangaId, limit: $limit, offset: $offset, order: $order) {
       total
       limit
       offset
