@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.danvoidl.readerapp'
+    namespace 'com.danvoidl.hokusaimanga'
     defaultConfig {
-        applicationId 'com.danvoidl.readerapp'
+        applicationId 'com.danvoidl.hokusaimanga'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

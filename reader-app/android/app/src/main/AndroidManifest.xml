@@ -26,7 +26,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="expo-starter"/>
-        <data android:scheme="exp+reader-app"/>
+        <data android:scheme="exp+hokusai-manga"/>
       </intent-filter>
     </activity>
   </application>

@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>reader-app</string>
+    <string>Hokusai Manga</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -28,13 +28,13 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>expo-starter</string>
-          <string>com.danvoidl.readerapp</string>
+          <string>com.danvoidl.hokusaimanga</string>
         </array>
       </dict>
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>exp+reader-app</string>
+          <string>exp+hokusai-manga</string>
         </array>
       </dict>
     </array>
