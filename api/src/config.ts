@@ -2,14 +2,10 @@ import { config as start } from 'dotenv'
 
 start()
 
+// The server no longer holds a MangaDex account of its own — each request is
+// authenticated with the caller's forwarded access token (see src/index.ts).
+// Only the upstream base URLs remain.
 export const config = {
   BASE_URL: process.env.BASE_URL,
-  AUTH_BASE_URL: process.env.AUTH_BASE_URL,
-
-  USERNAME: process.env.MD_USERNAME,
-  PASSWORD: process.env.MD_PASSWORD,
-  CLIENT_ID: process.env.CLIENT_ID,
-  CLIENT_SECRET: process.env.CLIENT_SECRET,
-  GRANT_TYPE: process.env.GRANT_TYPE,
-  UPLOAD_BASE_URL: process.env.UPLOAD_BASE_URL 
+  UPLOAD_BASE_URL: process.env.UPLOAD_BASE_URL
 }

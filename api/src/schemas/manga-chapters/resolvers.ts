@@ -1,7 +1,13 @@
-import modules from '~/src/repository/api'
+import type { GraphQLContext } from '~/src/index'
 import { Chapter, RelationshipAttributes } from '~/src/types/manga-chapter'
 import { Manga } from '~/src/types/manga'
 import { dedupeByBestLanguage, LANG_PRIORITY } from './utils'
+
+// The require-auth plugin (src/index.ts) rejects unauthenticated operations
+// before any resolver runs, so `context.modules` is always present here.
+function repo(context: GraphQLContext) {
+  return context.modules!.manga
+}
 
 interface QueryArgs {
   mangaId: string
@@ -22,12 +28,16 @@ function mangaRelId(chapter: Chapter): string | undefined {
 
 export const mangaChaptersResolver = {
   Query: {
-    chapters: async (parent: unknown, args: QueryArgs) => {
+    chapters: async (
+      parent: unknown,
+      args: QueryArgs,
+      context: GraphQLContext
+    ) => {
       const limit = args.limit ?? 10
       const offset = args.offset ?? 0
       const order = args.order ?? 'desc'
 
-      const [error, resp] = await modules.manga.getMangaChapters(
+      const [error, resp] = await repo(context).getMangaChapters(
         args.mangaId,
         LANG_PRIORITY
       )
@@ -47,8 +57,12 @@ export const mangaChaptersResolver = {
       }
     },
 
-    adjacentChapters: async (parent: unknown, args: QueryArgs) => {
-      const [error, resp] = await modules.manga.getMangaChapters(
+    adjacentChapters: async (
+      parent: unknown,
+      args: QueryArgs,
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getMangaChapters(
         args.mangaId,
         LANG_PRIORITY
       )
@@ -68,8 +82,12 @@ export const mangaChaptersResolver = {
       }
     },
 
-    chapterImgs: async (parent: unknown, args: QueryArgs) => {
-      const [error, resp] = await modules.manga.getMangaChapterImgs(
+    chapterImgs: async (
+      parent: unknown,
+      args: QueryArgs,
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getMangaChapterImgs(
         args.chapterId
       )
 
@@ -86,8 +104,12 @@ export const mangaChaptersResolver = {
     // carrying its manga. The chapter's manga relationship has no cover, so we
     // batch-fetch the manga by id (with cover_art) and attach the real node —
     // the Manga.coverUrl field resolver then builds the URL.
-    latestChapters: async (parent: unknown, args: LatestChaptersArgs) => {
-      const [error, resp] = await modules.manga.getLatestChapters(args.limit)
+    latestChapters: async (
+      parent: unknown,
+      args: LatestChaptersArgs,
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getLatestChapters(args.limit)
 
       if (error) return []
 
@@ -102,7 +124,7 @@ export const mangaChaptersResolver = {
       ]
 
       const [mangaError, mangaResp] =
-        await modules.manga.getMangasByIds(mangaIds)
+        await repo(context).getMangasByIds(mangaIds)
 
       if (mangaError) return []
 

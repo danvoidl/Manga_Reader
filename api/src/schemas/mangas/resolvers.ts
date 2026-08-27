@@ -1,4 +1,5 @@
-import modules from '~/src/repository/api'
+import type { ApiModules } from '~/src/repository/api'
+import type { GraphQLContext } from '~/src/index'
 import { Manga } from '~/src/types/manga'
 import { config } from '~/src/config'
 
@@ -31,14 +32,23 @@ type SortOrder = 'asc' | 'desc'
 
 const DEFAULT_LIMIT = 96
 
+type MangaRepo = ApiModules['manga']
+
+// The require-auth plugin (src/index.ts) rejects unauthenticated operations
+// before any resolver runs, so `context.modules` is always present here.
+function repo(context: GraphQLContext): MangaRepo {
+  return context.modules!.manga
+}
+
 // Shared helper: fetch a manga list with a given sort order, swallowing errors.
 async function fetchMangas(
+  manga: MangaRepo,
   order: Record<string, SortOrder>,
   limit = DEFAULT_LIMIT,
   includedTags: string[] = [],
   createdAtSince = ''
 ) {
-  const [error, resp] = await modules.manga.getManga(
+  const [error, resp] = await manga.getManga(
     '',
     limit,
     order,
@@ -53,16 +63,25 @@ async function fetchMangas(
 
 export const mangaResolvers = {
   Query: {
-    mangas: async () => fetchMangas({ followedCount: 'desc' }),
-    manga: async (parent: unknown, args: { id: string }) => {
-      const [error, resp] = await modules.manga.getMangaById(args.id)
+    mangas: async (parent: unknown, args: unknown, context: GraphQLContext) =>
+      fetchMangas(repo(context), { followedCount: 'desc' }),
+    manga: async (
+      parent: unknown,
+      args: { id: string },
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getMangaById(args.id)
 
       if (error) return null
 
       return resp.data
     },
-    mangasByName: async (parent: unknown, args: MangaArgs) => {
-      const [error, resp] = await modules.manga.getManga(
+    mangasByName: async (
+      parent: unknown,
+      args: MangaArgs,
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getManga(
         args.mangaName,
         args.limit
       )
@@ -71,28 +90,61 @@ export const mangaResolvers = {
 
       return resp.data
     },
-    latestUpdates: async (parent: unknown, args: ListArgs) =>
-      fetchMangas({ latestUploadedChapter: 'desc' }, args.limit),
-    recentlyAdded: async (parent: unknown, args: ListArgs) =>
-      fetchMangas({ createdAt: 'desc' }, args.limit),
-    mostPopular: async (parent: unknown, args: ListArgs) =>
-      fetchMangas({ followedCount: 'desc' }, args.limit),
-    highestRanking: async (parent: unknown, args: ListArgs) =>
-      fetchMangas({ rating: 'desc' }, args.limit),
+    latestUpdates: async (
+      parent: unknown,
+      args: ListArgs,
+      context: GraphQLContext
+    ) => fetchMangas(repo(context), { latestUploadedChapter: 'desc' }, args.limit),
+    recentlyAdded: async (
+      parent: unknown,
+      args: ListArgs,
+      context: GraphQLContext
+    ) => fetchMangas(repo(context), { createdAt: 'desc' }, args.limit),
+    mostPopular: async (
+      parent: unknown,
+      args: ListArgs,
+      context: GraphQLContext
+    ) => fetchMangas(repo(context), { followedCount: 'desc' }, args.limit),
+    highestRanking: async (
+      parent: unknown,
+      args: ListArgs,
+      context: GraphQLContext
+    ) => fetchMangas(repo(context), { rating: 'desc' }, args.limit),
     // Recently added (last 30 days) ordered by rating — powers the home banner.
-    topRatedRecent: async (parent: unknown, args: ListArgs) => {
+    topRatedRecent: async (
+      parent: unknown,
+      args: ListArgs,
+      context: GraphQLContext
+    ) => {
       const createdAtSince = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 19)
 
-      return fetchMangas({ rating: 'desc' }, args.limit, [], createdAtSince)
+      return fetchMangas(
+        repo(context),
+        { rating: 'desc' },
+        args.limit,
+        [],
+        createdAtSince
+      )
     },
     mangasByTag: async (
       parent: unknown,
-      args: { includedTags: string[]; limit?: number }
-    ) => fetchMangas({ followedCount: 'desc' }, args.limit, args.includedTags),
-    categories: async () => {
-      const [error, resp] = await modules.manga.getTags()
+      args: { includedTags: string[]; limit?: number },
+      context: GraphQLContext
+    ) =>
+      fetchMangas(
+        repo(context),
+        { followedCount: 'desc' },
+        args.limit,
+        args.includedTags
+      ),
+    categories: async (
+      parent: unknown,
+      args: unknown,
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getTags()
 
       if (error) return []
 
@@ -101,7 +153,11 @@ export const mangaResolvers = {
     // Flexible Explore query: combines an optional title, multiple sort criteria
     // (order[<field>]=asc|desc) and included tag ids in a single call. Reuses
     // getManga, which already supports all four inputs.
-    exploreMangas: async (parent: unknown, args: ExploreArgs) => {
+    exploreMangas: async (
+      parent: unknown,
+      args: ExploreArgs,
+      context: GraphQLContext
+    ) => {
       const order = (args.order ?? []).reduce<Record<string, SortOrder>>(
         (acc, o) => ({ ...acc, [o.field]: o.direction ?? 'desc' }),
         {}
@@ -111,7 +167,7 @@ export const mangaResolvers = {
         ? order
         : { followedCount: 'desc' as SortOrder }
 
-      const [error, resp] = await modules.manga.getManga(
+      const [error, resp] = await repo(context).getManga(
         args.title ?? '',
         args.limit,
         finalOrder,
