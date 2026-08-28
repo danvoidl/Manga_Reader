@@ -1,3 +1,10 @@
+# [1.2.0-beta.10](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.9...v1.2.0-beta.10) (2026-08-28)
+
+
+### Features
+
+* **#3, #12:** gate de login, requests com token do usuário e backup automático dos dados locais ([d98ffce](https://github.com/danvoidl/Manga_Reader/commit/d98ffce2f789d603c7586ae257eb81c9420486b6)), closes [#3](https://github.com/danvoidl/Manga_Reader/issues/3) [#12](https://github.com/danvoidl/Manga_Reader/issues/12)
+
 # [1.2.0-beta.9](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.8...v1.2.0-beta.9) (2026-08-27)
 
 
