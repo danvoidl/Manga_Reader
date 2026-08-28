@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/android-icon-background.png"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.danvoidl.hokusaimanga"
+      "package": "com.danvoidl.hokusaimanga",
+      "allowBackup": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

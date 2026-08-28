@@ -5,11 +5,14 @@ import { ofetch, FetchError } from "ofetch";
 // this talks straight to auth.mangadex.org.
 //
 // Docs: https://api.mangadex.org/docs/02-authentication/personal-clients/
-export const AUTH_URL =
-  process.env.EXPO_PUBLIC_MANGADEX_AUTH_URL ?? "https://auth.mangadex.org";
-
-// Keycloak (OpenID Connect) token endpoint for MangaDex's realm.
-const TOKEN_ENDPOINT = `${AUTH_URL}/realms/mangadex/protocol/openid-connect/token`;
+//
+// Full Keycloak (OpenID Connect) token endpoint for MangaDex's realm. Kept in
+// the env so it can change without a code edit — set EXPO_PUBLIC_MANGADEX_AUTH_URL
+// to the complete URL (login and refresh both POST here). The fallback is the
+// current MangaDex endpoint.
+export const TOKEN_ENDPOINT =
+  process.env.EXPO_PUBLIC_MANGADEX_AUTH_URL ??
+  "https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token";
 
 export interface AuthTokens {
   access_token: string;
@@ -35,11 +38,15 @@ async function requestToken(form: URLSearchParams): Promise<AuthTokens> {
   let data: Partial<AuthTokens>;
 
   try {
-    // ofetch parses JSON, throws on non-2xx and sets the urlencoded
-    // Content-Type from the URLSearchParams body automatically.
+    // Send the body as an encoded string with an explicit urlencoded
+    // Content-Type. On React Native, passing a URLSearchParams object does NOT
+    // reliably set that header (the request goes out as text/plain), so
+    // Keycloak fails to parse the form and reports "Missing form parameter:
+    // grant_type". ofetch still parses the JSON response and throws on non-2xx.
     data = await ofetch<AuthTokens>(TOKEN_ENDPOINT, {
       method: "POST",
-      body: form,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form.toString(),
       retry: 0,
     });
   } catch (err) {

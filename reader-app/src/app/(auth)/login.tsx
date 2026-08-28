@@ -38,7 +38,9 @@ export default function LoginScreen() {
         clientId: clientId.trim(),
         clientSecret: clientSecret.trim(),
       });
-      router.back();
+      // No navigation needed: once the session persists, the root guard swaps
+      // the login group out for the app. This is the gate, so there's nowhere
+      // to go "back" to on a cold-start login.
     } catch (err) {
       setError(err instanceof Error ? err.message : "Não foi possível entrar.");
     } finally {
@@ -54,16 +56,7 @@ export default function LoginScreen() {
         className="px-6 flex-grow"
       >
         <KeyboardAwareScrollView style={{ flex: 1 }} bottomOffset={62}>
-          <Pressable
-            onPress={() => router.back()}
-            hitSlop={12}
-            className="mb-8"
-            accessibilityLabel="Voltar"
-          >
-            <Icon name="arrow-left" size={26} color="#AD89FF" />
-          </Pressable>
-
-          <AppText text="Entrar" size="title" className="mb-1" />
+          <AppText text="Entrar" size="title" className="mb-1 mt-8" />
           <AppText
             text="Use as credenciais da sua conta MangaDex e do seu client pessoal."
             size="sub"

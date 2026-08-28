@@ -18,6 +18,8 @@ import {
   saveSession,
   type StoredSession,
 } from "@/services/secureStore";
+import { setAuthTokenGetter } from "@/services/graphql";
+import { queryClient } from "@/services/queryClient";
 
 // Refresh a bit before the real expiry to avoid using an almost-dead token.
 const EXPIRY_SKEW_MS = 30_000;
@@ -102,6 +104,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     await persist(null);
+    // Drop any cached data fetched under the previous user, so a different
+    // account signing in on the same device never sees the old user's results.
+    queryClient.clear();
   }, [persist]);
 
   const getValidAccessToken = useCallback(async (): Promise<string | null> => {
@@ -140,6 +145,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return refreshPromise.current;
   }, [persist]);
+
+  // Let the plain (non-React) gqlRequest layer pull a valid token per request.
+  useEffect(() => {
+    setAuthTokenGetter(getValidAccessToken);
+    return () => setAuthTokenGetter(null);
+  }, [getValidAccessToken]);
 
   return (
     <AuthContext.Provider

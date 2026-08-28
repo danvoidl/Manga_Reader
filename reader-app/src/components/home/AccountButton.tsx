@@ -1,39 +1,26 @@
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import Icon from "@react-native-vector-icons/material-design-icons";
 import { useAuth } from "@/store/AuthContext";
 
-// Discreet, floating account affordance for the (optional) login. Tapping it
-// opens the login screen when logged out, or logs out when logged in.
+// Floating account affordance. The app is behind a mandatory login gate, so the
+// home is only ever reached while authenticated — tapping this logs out, which
+// sends the user back to the login screen via the root guard.
 export default function AccountButton() {
   const insets = useSafeAreaInsets();
-  const router = useRouter();
   const { isAuthenticated, logout, loading } = useAuth();
 
-  if (loading) return null;
-
-  function handlePress() {
-    if (isAuthenticated) {
-      logout();
-    } else {
-      router.push("/login");
-    }
-  }
+  if (loading || !isAuthenticated) return null;
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={logout}
       hitSlop={12}
-      accessibilityLabel={isAuthenticated ? "Sair" : "Entrar"}
+      accessibilityLabel="Sair"
       className="absolute right-5 z-10 h-10 w-10 items-center justify-center rounded-full bg-black/40"
       style={{ top: insets.top + 8 }}
     >
-      <Icon
-        name={isAuthenticated ? "account-check" : "account-outline"}
-        size={22}
-        color="#FFFFFF"
-      />
+      <Icon name="account-check" size={22} color="#FFFFFF" />
     </Pressable>
   );
 }
