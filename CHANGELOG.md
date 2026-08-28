@@ -1,3 +1,10 @@
+# [1.2.0-beta.9](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.8...v1.2.0-beta.9) (2026-08-27)
+
+
+### Features
+
+* added user auth ([11248e2](https://github.com/danvoidl/Manga_Reader/commit/11248e28574879ab5aa79e80a6bc87e74545dbe9))
+
 # [1.2.0-beta.8](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.7...v1.2.0-beta.8) (2026-08-17)
 
 
