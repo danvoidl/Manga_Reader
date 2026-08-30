@@ -1,3 +1,10 @@
+# [1.2.0-beta.11](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.10...v1.2.0-beta.11) (2026-08-30)
+
+
+### Features
+
+* polimento de UX (skeletons, pull-to-refresh, erro/retry, back button) + limpeza e middleware de auth ([e6ac074](https://github.com/danvoidl/Manga_Reader/commit/e6ac0746bb8f1b576c3662ef49e1a747daf14c3c))
+
 # [1.2.0-beta.10](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.9...v1.2.0-beta.10) (2026-08-28)
 
 
