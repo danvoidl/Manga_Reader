@@ -50,3 +50,8 @@ export function dedupeByBestLanguage(chapters: Chapter[]): Chapter[] {
     return nb - na
   })
 }
+
+//** Id of the manga a chapter belongs to (from its `manga` relationship). */ 
+export function mangaRelId(chapter: Chapter): string | undefined {
+  return chapter.relationships.find((rel) => rel.type === 'manga')?.id
+}

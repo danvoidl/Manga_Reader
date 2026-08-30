@@ -1,12 +1,7 @@
 import type { ApiModules } from '~/src/repository/api'
-import type { GraphQLContext } from '~/src/index'
 import { Manga } from '~/src/types/manga'
 import { config } from '~/src/config'
-
-interface MangaArgs {
-  mangaName: string
-  limit: number
-}
+import { GraphQLContext } from '~/src/middleware/auth'
 
 interface CoverUrlArgs {
   size: number
@@ -76,35 +71,11 @@ export const mangaResolvers = {
 
       return resp.data
     },
-    mangasByName: async (
-      parent: unknown,
-      args: MangaArgs,
-      context: GraphQLContext
-    ) => {
-      const [error, resp] = await repo(context).getManga(
-        args.mangaName,
-        args.limit
-      )
-
-      if (error) return []
-
-      return resp.data
-    },
-    latestUpdates: async (
-      parent: unknown,
-      args: ListArgs,
-      context: GraphQLContext
-    ) => fetchMangas(repo(context), { latestUploadedChapter: 'desc' }, args.limit),
     recentlyAdded: async (
       parent: unknown,
       args: ListArgs,
       context: GraphQLContext
     ) => fetchMangas(repo(context), { createdAt: 'desc' }, args.limit),
-    mostPopular: async (
-      parent: unknown,
-      args: ListArgs,
-      context: GraphQLContext
-    ) => fetchMangas(repo(context), { followedCount: 'desc' }, args.limit),
     highestRanking: async (
       parent: unknown,
       args: ListArgs,
@@ -158,17 +129,23 @@ export const mangaResolvers = {
       args: ExploreArgs,
       context: GraphQLContext
     ) => {
+      const title = args.title?.trim() ?? ''
+
       const order = (args.order ?? []).reduce<Record<string, SortOrder>>(
         (acc, o) => ({ ...acc, [o.field]: o.direction ?? 'desc' }),
         {}
       )
+
+      // MangaDex only accepts order[relevance] alongside a title query — sending
+      // it without one is rejected. Drop it when there's no search term.
+      if (!title) delete order.relevance
 
       const finalOrder = Object.keys(order).length
         ? order
         : { followedCount: 'desc' as SortOrder }
 
       const [error, resp] = await repo(context).getManga(
-        args.title ?? '',
+        title,
         args.limit,
         finalOrder,
         args.includedTags ?? []

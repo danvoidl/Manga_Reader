@@ -9,7 +9,7 @@ This is a two-package monorepo (no workspace tooling — each package is install
 - `reader-app/` — Expo / React Native manga reader (the client). Uses **bun** (`bun.lock`).
 - `api/` — Apollo GraphQL server that proxies the **MangaDex** REST API. Uses **npm** (`package-lock.json`). The GraphQL layer is a thin wrapper over MangaDex; consult the upstream API docs when adding/changing endpoints, query params, or types: https://api.mangadex.org/docs/
 
-The home screen (`reader-app/src/app/index.tsx`) now consumes the `api` GraphQL server (see "reader-app data layer" below). Other screens (the chapter reader, manga detail) still render from local seed data in `src/seed/` — migrating those to the API is ongoing work, not a bug.
+The whole reader-app (home, Explore, manga detail, chapter reader) consumes the `api` GraphQL server (see "reader-app data layer" below). There is no local seed/mock data.
 
 ## Commands
 
@@ -36,7 +36,7 @@ Data access uses a **repository + factory pattern**:
 - `src/repository/modules/*.module.ts` — one class per domain extending `FetchFactory`. Modules encapsulate MangaDex query params (e.g. `manga.module.ts` hardcodes `availableTranslatedLanguage=pt-br`, content rating, and cover/author includes).
 - `src/repository/api.ts` — exports `createModules(token)`, a **per-request** factory: it builds an `ofetch` instance whose `onRequest` hook injects `Authorization: Bearer <token>` (the caller's forwarded token) and returns `{ manga }`.
 
-**Per-user identity (no server account).** The server has no MangaDex account of its own. Each GraphQL request must carry the logged-in user's MangaDex access token (the reader-app forwards it — see below); `src/index.ts`'s Apollo `context` reads that bearer and calls `createModules(token)`, so every upstream call runs under that user's identity. A `didResolveOperation` plugin **rejects any operation without a token** (`UNAUTHENTICATED` / HTTP 401), except `IntrospectionQuery` (left open so the reader-app's codegen can read the schema over HTTP). Resolvers pull the request-scoped modules from `context.modules`. There is no owner-credential login/refresh/cache anymore (the old `src/cache/`, `auth.module.ts`, and owner env vars were removed).
+**Per-user identity (no server account).** The server has no MangaDex account of its own. Each GraphQL request must carry the logged-in user's MangaDex access token (the reader-app forwards it — see below); `src/index.ts`'s Apollo `context` reads that bearer and calls `createModules(token)`, so every upstream call runs under that user's identity. A `didResolveOperation` plugin **rejects any operation without a token** (`UNAUTHENTICATED` / HTTP 401), except operations whose `operationName` is `IntrospectionQuery` (left open so the reader-app's codegen can read the schema over HTTP). Note: graphql-codegen's URL loader doesn't send that `operationName`, so codegen must pass a (throwaway) bearer via `CODEGEN_AUTH_TOKEN` — see `reader-app/codegen.ts`; introspection never reaches the resolvers, so the value is irrelevant. Resolvers pull the request-scoped modules from `context.modules`. There is no owner-credential login/refresh/cache anymore (the old `src/cache/`, `auth.module.ts`, and owner env vars were removed).
 
 Config comes from env vars via `dotenv` in `src/config.ts` (`.env` is gitignored). Required keys: `BASE_URL`, `UPLOAD_BASE_URL`.
 
@@ -45,17 +45,17 @@ Path alias: `~/*` → repo root (e.g. `~/src/types/...`). ESM (`"type": "module"
 ## reader-app architecture
 
 Expo Router (file-based routing under `src/app/`); `expo-router/entry` is the app entry. `src/app/_layout.tsx` is the root Stack (headers hidden, dark `#262626` background, wrapped in `GestureHandlerRootView`). Routes:
-- `index.tsx` — home
-- `manga-page.tsx` — manga detail
-- `manga-chapter/(chapter)/[id].tsx` — the chapter reader
+- `(tabs)/` — the tab bar: `index.tsx` (Início/home), `explore.tsx` (Explorar), `bookshelf.tsx` (Estante), `profile.tsx` (Perfil/logout)
+- `manga/[id].tsx` — manga detail
+- `manga/chapter/[id].tsx` — the chapter reader
 
 Styling is **NativeWind v4** (Tailwind classes via `className`). `global.css` is the Tailwind entry (wired through `metro.config.js` `withNativeWind` and the `babel.config.js` `jsxImportSource: nativewind` preset). `src/utils/cn.ts` merges classes with `clsx` + `tailwind-merge`. The app is dark-mode only (`userInterfaceStyle: "dark"`).
 
 The chapter reader is state-driven through React Context providers under `src/store/`, composed in the reader route:
-- `ChapterControlContext` — tracks `currentPage`/`totalPages` and drives the page `FlatList` via `chapterListRef.scrollToIndex` (`handleSlide`). Currently reads page count from `src/seed/chapters`.
+- `ChapterControlContext` — tracks `currentPage`/`totalPages` and drives the page `FlatList` via `chapterListRef.scrollToIndex` (`handleSlide`). Page count comes from the chapter's images (`useChapterImgs`).
 - `SystemBarsContext` — status/navigation bar visibility while reading.
 
-Components are grouped by feature (`components/manga-chapter/`, `components/manga-page/`, `components/manga/`) plus shared primitives (`AppText`, `Chip`, `Board`, zoom via `@likashefqet/react-native-image-zoom`). Animations use `react-native-reanimated` v4 (with `react-native-worklets`); images use `expo-image` (see the shared `blurhash` in `src/constants/general.ts`).
+Components are grouped by feature (`components/reader/`, `components/manga-detail/`, `components/manga/`, `components/explore/`, `components/home/`, `components/bookshelf/`) plus shared primitives in `components/ui/` (`Button`, `Input`, `BackButton`, `ErrorState`, `Skeleton`) and top-level shared components (`AppText`, `Chip`, `VerticalManga`, zoom via `@likashefqet/react-native-image-zoom`). Loading states use skeleton placeholders (`components/skeletons/MangaSkeletons.tsx`, built on the `Skeleton` primitive) instead of spinners; error states use `ErrorState` with a retry wired to the query's `refetch` (list hooks expose `refetch`). Animations use `react-native-reanimated` v4 (with `react-native-worklets`, `.get()/.set()` idiom); images use `expo-image` (see the shared `blurhash` in `src/constants/general.ts`).
 
 Path alias: `@/*` → `src/*` (`tsconfig.json`).
 
@@ -76,7 +76,7 @@ Each user authenticates with their own MangaDex *personal API client*. Token **m
 - `src/services/secureStore.ts` — persists the session JSON (client id/secret + tokens, **never the password**) in the device secure enclave via `expo-secure-store`. Native-only: SecureStore is unavailable on web.
 - `src/store/AuthContext.tsx` — `useAuth()` (`login` / `logout` / `getValidAccessToken` / `isAuthenticated` / `loading`). Restores the session on startup, auto-refreshes the 15-min access token (coalescing concurrent refreshes), and clears the session if the refresh token is dead. Registers `getValidAccessToken` with `graphql.ts` via `setAuthTokenGetter` so `gqlRequest` always sends a fresh token; `logout` also calls `queryClient.clear()` to drop the previous user's cached data. Provider is mounted in `src/app/_layout.tsx`.
 - **Auth gate (mandatory login).** `src/app/_layout.tsx` renders a `RootNavigator` inside `AuthProvider` that holds the splash while `loading`, then uses `Stack.Protected` guards: `(tabs)` + `manga` behind `isAuthenticated`, the `(auth)` group behind `!isAuthenticated`. Login/logout flip the guard — no manual navigation. So the app opens on login unless a session is already restored.
-- Screens live in the `src/app/(auth)/` group with its own `_layout.tsx` (initial route `login`): `login.tsx` (form) + `login-help.tsx` (how to obtain the client id/secret + privacy notice). `src/components/home/AccountButton.tsx` is now logout-only (home is only reachable when authenticated).
+- Screens live in the `src/app/(auth)/` group with its own `_layout.tsx` (initial route `login`): `login.tsx` (form) + `login-help.tsx` (how to obtain the client id/secret + privacy notice). Logout lives on the Perfil tab (`src/app/(tabs)/profile.tsx`); home is only reachable when authenticated.
 - Reusable form primitives live in `src/components/ui/` (`Input`, `Button`).
 
 ### reader-app local data & backup

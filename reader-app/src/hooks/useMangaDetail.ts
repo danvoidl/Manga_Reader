@@ -23,6 +23,7 @@ export function useMangaDetail(id?: string) {
       ? query.error instanceof Error
         ? query.error.message
         : 'Erro ao carregar mangá'
-      : null
+      : null,
+    refetch: query.refetch
   }
 }

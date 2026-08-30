@@ -6,11 +6,12 @@ interface UseChapterImgsResult {
   data: string[]
   loading: boolean
   error: string | null
+  refetch: () => void
 }
 
 // Fetches the ordered page image URLs for a chapter (URLs built server-side).
 export function useChapterImgs(chapterId?: string): UseChapterImgsResult {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['chapterImgs', chapterId],
     queryFn: () =>
       gqlRequest(CHAPTER_IMGS_QUERY, {
@@ -23,6 +24,7 @@ export function useChapterImgs(chapterId?: string): UseChapterImgsResult {
   return {
     data: data ?? [],
     loading: isLoading,
-    error: error?.message ?? null
+    error: error?.message ?? null,
+    refetch
   }
 }

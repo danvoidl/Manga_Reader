@@ -11,6 +11,7 @@ export function ActionAdventureMangaSection() {
       data={actionAdventure.data}
       loading={actionAdventure.loading}
       error={actionAdventure.error}
+      onRetry={actionAdventure.refetch}
     />
   )
 }

@@ -16,11 +16,21 @@ try {
 //   1. CODEGEN_SCHEMA_URL — explicit override, just for codegen
 //   2. EXPO_PUBLIC_API_URL — same remote the app talks to (single source of truth)
 //   3. http://localhost:4000 — the local Apollo dev server
+const schemaUrl =
+  process.env.CODEGEN_SCHEMA_URL ??
+  process.env.EXPO_PUBLIC_API_URL ??
+  "http://localhost:4000";
+
+// The API now requires a bearer token on every operation except the introspection
+// query it matches *by operationName* — which the codegen URL loader doesn't send.
+// Provide any token via CODEGEN_AUTH_TOKEN so introspection passes the auth gate
+// (introspection never reaches the upstream resolvers, so the value is irrelevant).
+const authToken = process.env.CODEGEN_AUTH_TOKEN;
+
 const config: CodegenConfig = {
-  schema:
-    process.env.CODEGEN_SCHEMA_URL ??
-    process.env.EXPO_PUBLIC_API_URL ??
-    "http://localhost:4000",
+  schema: authToken
+    ? [{ [schemaUrl]: { headers: { Authorization: `Bearer ${authToken}` } } }]
+    : schemaUrl,
   documents: ["src/**/*.{ts,tsx}"],
   // No graphql() calls yet in a file is fine — don't fail the run.
   ignoreNoDocuments: true,

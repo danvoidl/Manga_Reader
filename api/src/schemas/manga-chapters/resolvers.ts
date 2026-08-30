@@ -1,7 +1,7 @@
-import type { GraphQLContext } from '~/src/index'
-import { Chapter, RelationshipAttributes } from '~/src/types/manga-chapter'
+import { RelationshipAttributes } from '~/src/types/manga-chapter'
 import { Manga } from '~/src/types/manga'
-import { dedupeByBestLanguage, LANG_PRIORITY } from './utils'
+import { dedupeByBestLanguage, LANG_PRIORITY, mangaRelId } from './utils'
+import { GraphQLContext } from '~/src/middleware/auth'
 
 // The require-auth plugin (src/index.ts) rejects unauthenticated operations
 // before any resolver runs, so `context.modules` is always present here.
@@ -21,10 +21,7 @@ interface LatestChaptersArgs {
   limit: number
 }
 
-// Id of the manga a chapter belongs to (from its `manga` relationship).
-function mangaRelId(chapter: Chapter): string | undefined {
-  return chapter.relationships.find((rel) => rel.type === 'manga')?.id
-}
+
 
 export const mangaChaptersResolver = {
   Query: {

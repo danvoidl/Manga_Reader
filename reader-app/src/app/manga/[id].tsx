@@ -8,6 +8,7 @@ import { MangaPageBanner } from '@/components/manga-detail/Banner'
 import { MangaPageChapter } from '@/components/manga-detail/ChapterRow'
 import { ChapterListControls } from '@/components/manga-detail/ChapterListControls'
 import AppText from '@/components/AppText'
+import BackButton from '@/components/ui/BackButton'
 import { MangaPageEmptyChapterList } from '@/components/manga-detail/EmptyList'
 import type { ChapterRow } from '@/types/manga'
 
@@ -25,7 +26,8 @@ export default function MangaPage() {
     data: chapters,
     totalPages,
     loading,
-    error
+    error,
+    refetch
   } = useChapters(id, { page, pageSize, order })
 
   const listRef = useRef<FlatList<ChapterRow>>(null)
@@ -47,6 +49,7 @@ export default function MangaPage() {
 
   return (
     <SafeAreaView className="flex-1" edges={['bottom']}>
+      <BackButton />
       <FlatList
         ref={listRef}
         data={chapters}
@@ -77,7 +80,11 @@ export default function MangaPage() {
         }
         contentContainerStyle={{ paddingBottom: 24 }}
         ListEmptyComponent={() => (
-          <MangaPageEmptyChapterList error={error} loading={loading} />
+          <MangaPageEmptyChapterList
+            error={error}
+            loading={loading}
+            onRetry={refetch}
+          />
         )}
       />
     </SafeAreaView>

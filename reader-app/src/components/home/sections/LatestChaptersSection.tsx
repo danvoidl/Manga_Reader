@@ -1,7 +1,9 @@
-import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
+import { FlatList, Pressable, View } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import AppText from '@/components/AppText'
+import ErrorState from '@/components/ui/ErrorState'
+import { LatestChapterRowSkeleton } from '@/components/skeletons/MangaSkeletons'
 import { useLatestChapters } from '@/hooks/useLatestChapters'
 import type { LatestChapterRow } from '@/types/manga'
 
@@ -45,7 +47,7 @@ function LatestChapterCard({ row }: { row: LatestChapterRow }) {
 }
 
 export function LatestChaptersSection() {
-  const { data, loading, error } = useLatestChapters(20)
+  const { data, loading, error, refetch } = useLatestChapters(20)
 
   return (
     <View className="mt-6">
@@ -55,14 +57,10 @@ export function LatestChaptersSection() {
         className="mb-4 ml-6"
       />
 
-      {loading && (
-        <View className="h-[240px] items-center justify-center">
-          <ActivityIndicator color="#ffffff" />
-        </View>
-      )}
+      {loading && <LatestChapterRowSkeleton />}
 
-      {error && (
-        <AppText text={error} size="sub" className="ml-6 text-red-400" />
+      {!loading && error && (
+        <ErrorState variant="inline" message={error} onRetry={refetch} />
       )}
 
       {!loading && !error && (

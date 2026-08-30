@@ -11,7 +11,7 @@ export default function ExploreScreen() {
   const [sorts, setSorts] = useState<SortOption[]>([DEFAULT_SORT])
   const [tags, setTags] = useState<string[]>([])
 
-  const { data, loading, error } = useExploreMangas({
+  const { data, loading, error, refetch } = useExploreMangas({
     title: query,
     sorts,
     includedTags: tags,
@@ -36,6 +36,7 @@ export default function ExploreScreen() {
         error={error}
         loading={loading}
         searching={searching}
+        onRetry={refetch}
       />
     </SafeAreaView>
   )

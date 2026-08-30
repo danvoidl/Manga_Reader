@@ -8,6 +8,7 @@ interface UseMangasByTagResult {
   data: MangaCover[]
   loading: boolean
   error: string | null
+  refetch: () => void
 }
 
 export function useMangasByTag(
@@ -16,7 +17,7 @@ export function useMangasByTag(
 ): UseMangasByTagResult {
   const tagsKey = includedTags.join(',')
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['mangasByTag', tagsKey, limit],
     queryFn: () => gqlRequest(MANGAS_BY_TAG_QUERY, { includedTags, limit }),
     select: (resp) => toMangaCovers(resp.mangas)
@@ -25,6 +26,7 @@ export function useMangasByTag(
   return {
     data: data ?? [],
     loading: isLoading,
-    error: error?.message ?? null
+    error: error?.message ?? null,
+    refetch
   }
 }

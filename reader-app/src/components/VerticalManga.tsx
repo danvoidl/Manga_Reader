@@ -1,7 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import AppText from "./AppText";
 import { useRouter } from "expo-router";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const defaultCover =
   "https://mangadex.org/covers/d0f57b4a-8a11-4fc4-9d25-de9b0527eab8/e9d15539-2cb8-40a6-b487-dd6796e093a7.jpg.256.jpg";
@@ -22,6 +29,11 @@ export default function VerticalManga({
   rank,
 }: VerticalMangaProps) {
   const router = useRouter();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.get() }],
+  }));
 
   function handlePress() {
     if (!mangaId) return;
@@ -30,7 +42,12 @@ export default function VerticalManga({
 
   return (
     <View style={style.container}>
-      <TouchableOpacity onPress={handlePress}>
+      <AnimatedPressable
+        onPress={handlePress}
+        onPressIn={() => scale.set(withTiming(0.96, { duration: 100 }))}
+        onPressOut={() => scale.set(withTiming(1, { duration: 120 }))}
+        style={animatedStyle}
+      >
         <Image
           style={style.mangaCover}
           source={coverUrl}
@@ -51,7 +68,7 @@ export default function VerticalManga({
             {rank}
           </Text>
         )}
-      </TouchableOpacity>
+      </AnimatedPressable>
 
       <AppText
         text={mangaName}

@@ -11,6 +11,7 @@ export function RomanceSection() {
       data={romance.data}
       loading={romance.loading}
       error={romance.error}
+      onRetry={romance.refetch}
     />
   )
 }

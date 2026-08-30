@@ -2,6 +2,7 @@ import { View, useWindowDimensions } from 'react-native'
 import Banner from '../home/Banner'
 import MangaInfo from '../manga/Info'
 import { BookshelfStatusButton } from './BookshelfStatusButton'
+import { MangaDetailBannerSkeleton } from '@/components/skeletons/MangaSkeletons'
 import type { MangaDetail } from '@/types/manga'
 
 interface Props {
@@ -13,7 +14,7 @@ export function MangaPageBanner({ manga }: Props) {
 
   // Reserve the banner space while the detail is still loading.
   if (!manga) {
-    return <View style={{ height: height * 0.6 }} />
+    return <MangaDetailBannerSkeleton height={height * 0.6} />
   }
 
   return (

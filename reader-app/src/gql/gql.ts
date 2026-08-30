@@ -16,14 +16,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 type Documents = {
     "\n  fragment CardFields on Manga {\n    id\n    cover: coverUrl(size: 512)\n    attributes {\n      contentRating\n      title {\n        en\n        pt_br\n        ja\n      }\n      altTitles {\n        en\n        pt_br\n      }\n    }\n  }\n": typeof types.CardFieldsFragmentDoc,
     "\n  fragment DetailFields on Manga {\n    id\n    cover: coverUrl(size: 512)\n    attributes {\n      contentRating\n      title {\n        en\n        pt_br\n        ja\n      }\n      altTitles {\n        en\n        pt_br\n      }\n      description {\n        en\n        pt_br\n      }\n      tags {\n        attributes {\n          name {\n            en\n          }\n        }\n      }\n    }\n  }\n": typeof types.DetailFieldsFragmentDoc,
-    "\n  query LatestUpdates($limit: Int) {\n    mangas: latestUpdates(limit: $limit) {\n      ...CardFields\n    }\n  }\n": typeof types.LatestUpdatesDocument,
     "\n  query RecentlyAdded($limit: Int) {\n    mangas: recentlyAdded(limit: $limit) {\n      ...CardFields\n    }\n  }\n": typeof types.RecentlyAddedDocument,
     "\n  query HighestRanking($limit: Int) {\n    mangas: highestRanking(limit: $limit) {\n      ...CardFields\n    }\n  }\n": typeof types.HighestRankingDocument,
-    "\n  query Featured($limit: Int) {\n    mangas: mostPopular(limit: $limit) {\n      ...DetailFields\n    }\n  }\n": typeof types.FeaturedDocument,
     "\n  query TopRatedRecent($limit: Int) {\n    mangas: topRatedRecent(limit: $limit) {\n      ...DetailFields\n    }\n  }\n": typeof types.TopRatedRecentDocument,
     "\n  query Manga($id: ID!) {\n    manga(id: $id) {\n      ...DetailFields\n    }\n  }\n": typeof types.MangaDocument,
     "\n  query MangasByTag($includedTags: [ID!]!, $limit: Int) {\n    mangas: mangasByTag(includedTags: $includedTags, limit: $limit) {\n      ...CardFields\n    }\n  }\n": typeof types.MangasByTagDocument,
-    "\n  query MangasByName($mangaName: String, $limit: Int) {\n    mangas: mangasByName(mangaName: $mangaName, limit: $limit) {\n      ...CardFields\n    }\n  }\n": typeof types.MangasByNameDocument,
     "\n  query ExploreMangas(\n    $title: String\n    $order: [MangaOrderInput!]\n    $includedTags: [ID!]\n    $limit: Int\n  ) {\n    mangas: exploreMangas(\n      title: $title\n      order: $order\n      includedTags: $includedTags\n      limit: $limit\n    ) {\n      ...CardFields\n    }\n  }\n": typeof types.ExploreMangasDocument,
     "\n  query Chapters($mangaId: ID!, $limit: Int, $offset: Int, $order: ChapterOrder) {\n    chapters(mangaId: $mangaId, limit: $limit, offset: $offset, order: $order) {\n      total\n      limit\n      offset\n      items {\n        id\n        attributes {\n          chapter\n          title\n          translatedLanguage\n        }\n        relationships {\n          type\n          attributes {\n            ... on ScanlationGroupAttributes {\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n": typeof types.ChaptersDocument,
     "\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n": typeof types.ChapterImgsDocument,
@@ -35,14 +32,11 @@ type Documents = {
 const documents: Documents = {
     "\n  fragment CardFields on Manga {\n    id\n    cover: coverUrl(size: 512)\n    attributes {\n      contentRating\n      title {\n        en\n        pt_br\n        ja\n      }\n      altTitles {\n        en\n        pt_br\n      }\n    }\n  }\n": types.CardFieldsFragmentDoc,
     "\n  fragment DetailFields on Manga {\n    id\n    cover: coverUrl(size: 512)\n    attributes {\n      contentRating\n      title {\n        en\n        pt_br\n        ja\n      }\n      altTitles {\n        en\n        pt_br\n      }\n      description {\n        en\n        pt_br\n      }\n      tags {\n        attributes {\n          name {\n            en\n          }\n        }\n      }\n    }\n  }\n": types.DetailFieldsFragmentDoc,
-    "\n  query LatestUpdates($limit: Int) {\n    mangas: latestUpdates(limit: $limit) {\n      ...CardFields\n    }\n  }\n": types.LatestUpdatesDocument,
     "\n  query RecentlyAdded($limit: Int) {\n    mangas: recentlyAdded(limit: $limit) {\n      ...CardFields\n    }\n  }\n": types.RecentlyAddedDocument,
     "\n  query HighestRanking($limit: Int) {\n    mangas: highestRanking(limit: $limit) {\n      ...CardFields\n    }\n  }\n": types.HighestRankingDocument,
-    "\n  query Featured($limit: Int) {\n    mangas: mostPopular(limit: $limit) {\n      ...DetailFields\n    }\n  }\n": types.FeaturedDocument,
     "\n  query TopRatedRecent($limit: Int) {\n    mangas: topRatedRecent(limit: $limit) {\n      ...DetailFields\n    }\n  }\n": types.TopRatedRecentDocument,
     "\n  query Manga($id: ID!) {\n    manga(id: $id) {\n      ...DetailFields\n    }\n  }\n": types.MangaDocument,
     "\n  query MangasByTag($includedTags: [ID!]!, $limit: Int) {\n    mangas: mangasByTag(includedTags: $includedTags, limit: $limit) {\n      ...CardFields\n    }\n  }\n": types.MangasByTagDocument,
-    "\n  query MangasByName($mangaName: String, $limit: Int) {\n    mangas: mangasByName(mangaName: $mangaName, limit: $limit) {\n      ...CardFields\n    }\n  }\n": types.MangasByNameDocument,
     "\n  query ExploreMangas(\n    $title: String\n    $order: [MangaOrderInput!]\n    $includedTags: [ID!]\n    $limit: Int\n  ) {\n    mangas: exploreMangas(\n      title: $title\n      order: $order\n      includedTags: $includedTags\n      limit: $limit\n    ) {\n      ...CardFields\n    }\n  }\n": types.ExploreMangasDocument,
     "\n  query Chapters($mangaId: ID!, $limit: Int, $offset: Int, $order: ChapterOrder) {\n    chapters(mangaId: $mangaId, limit: $limit, offset: $offset, order: $order) {\n      total\n      limit\n      offset\n      items {\n        id\n        attributes {\n          chapter\n          title\n          translatedLanguage\n        }\n        relationships {\n          type\n          attributes {\n            ... on ScanlationGroupAttributes {\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n": types.ChaptersDocument,
     "\n  query ChapterImgs($chapterId: ID!) {\n    chapterImgs(chapterId: $chapterId)\n  }\n": types.ChapterImgsDocument,
@@ -77,19 +71,11 @@ export function graphql(source: "\n  fragment DetailFields on Manga {\n    id\n 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query LatestUpdates($limit: Int) {\n    mangas: latestUpdates(limit: $limit) {\n      ...CardFields\n    }\n  }\n"): (typeof documents)["\n  query LatestUpdates($limit: Int) {\n    mangas: latestUpdates(limit: $limit) {\n      ...CardFields\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n  query RecentlyAdded($limit: Int) {\n    mangas: recentlyAdded(limit: $limit) {\n      ...CardFields\n    }\n  }\n"): (typeof documents)["\n  query RecentlyAdded($limit: Int) {\n    mangas: recentlyAdded(limit: $limit) {\n      ...CardFields\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query HighestRanking($limit: Int) {\n    mangas: highestRanking(limit: $limit) {\n      ...CardFields\n    }\n  }\n"): (typeof documents)["\n  query HighestRanking($limit: Int) {\n    mangas: highestRanking(limit: $limit) {\n      ...CardFields\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query Featured($limit: Int) {\n    mangas: mostPopular(limit: $limit) {\n      ...DetailFields\n    }\n  }\n"): (typeof documents)["\n  query Featured($limit: Int) {\n    mangas: mostPopular(limit: $limit) {\n      ...DetailFields\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -102,10 +88,6 @@ export function graphql(source: "\n  query Manga($id: ID!) {\n    manga(id: $id)
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query MangasByTag($includedTags: [ID!]!, $limit: Int) {\n    mangas: mangasByTag(includedTags: $includedTags, limit: $limit) {\n      ...CardFields\n    }\n  }\n"): (typeof documents)["\n  query MangasByTag($includedTags: [ID!]!, $limit: Int) {\n    mangas: mangasByTag(includedTags: $includedTags, limit: $limit) {\n      ...CardFields\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query MangasByName($mangaName: String, $limit: Int) {\n    mangas: mangasByName(mangaName: $mangaName, limit: $limit) {\n      ...CardFields\n    }\n  }\n"): (typeof documents)["\n  query MangasByName($mangaName: String, $limit: Int) {\n    mangas: mangasByName(mangaName: $mangaName, limit: $limit) {\n      ...CardFields\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

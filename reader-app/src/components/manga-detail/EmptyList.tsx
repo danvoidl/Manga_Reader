@@ -1,21 +1,17 @@
 import AppText from '@/components/AppText'
-import { View, ActivityIndicator } from 'react-native'
+import ErrorState from '@/components/ui/ErrorState'
+import { ChapterListSkeleton } from '@/components/skeletons/MangaSkeletons'
 
 interface Props {
   loading: boolean
   error: string | null
+  onRetry?: () => void
 }
 
-export function MangaPageEmptyChapterList({ loading, error }: Props) {
-  if (loading)
-    return (
-      <View className="items-center py-8">
-        <ActivityIndicator color="#ffffff" />
-      </View>
-    )
+export function MangaPageEmptyChapterList({ loading, error, onRetry }: Props) {
+  if (loading) return <ChapterListSkeleton />
 
-  if (error)
-    return <AppText text={error} size="sub" className="px-6 text-red-400" />
+  if (error) return <ErrorState variant="inline" message={error} onRetry={onRetry} />
 
   return (
     <AppText

@@ -62,6 +62,19 @@ export default function TabsLayout() {
           )
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Perfil',
+          tabBarIcon: ({ color, size, focused }) => (
+            <SymbolView
+              name={{ ios: 'person.crop.circle', android: 'account_circle' }}
+              tintColor={color}
+              size={size}
+            />
+          )
+        }}
+      />
     </Tabs>
   )
 }

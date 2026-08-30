@@ -8,11 +8,12 @@ interface UseLatestChaptersResult {
   data: LatestChapterRow[]
   loading: boolean
   error: string | null
+  refetch: () => void
 }
 
 // Home "Últimos capítulos adicionados" — global latest chapter uploads.
 export function useLatestChapters(limit = 20): UseLatestChaptersResult {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['latestChapters', limit],
     queryFn: () => gqlRequest(LATEST_CHAPTERS_QUERY, { limit }),
     select: (resp) => toLatestChapterRows(resp.latestChapters)
@@ -21,6 +22,7 @@ export function useLatestChapters(limit = 20): UseLatestChaptersResult {
   return {
     data: data ?? [],
     loading: isLoading,
-    error: error?.message ?? null
+    error: error?.message ?? null,
+    refetch
   }
 }

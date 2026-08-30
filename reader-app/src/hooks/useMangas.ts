@@ -8,6 +8,7 @@ interface UseMangasResult {
   data: MangaCover[]
   loading: boolean
   error: string | null
+  refetch: () => void
 }
 
 /**
@@ -23,7 +24,7 @@ type MangaListDocument = TypedDocumentNode<
 >
 
 export function useMangas(query: MangaListDocument, limit = 8): UseMangasResult {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     // `limit` is part of the key: the same query at different limits (e.g. home
     // vs. Explore) must not share a cache entry.
     queryKey: ['mangas', query, limit],
@@ -34,6 +35,7 @@ export function useMangas(query: MangaListDocument, limit = 8): UseMangasResult 
   return {
     data: data ?? [],
     loading: isLoading,
-    error: error?.message ?? null
+    error: error?.message ?? null,
+    refetch
   }
 }

@@ -19,6 +19,7 @@ interface UseChaptersResult {
   loading: boolean
   isPlaceholder: boolean
   error: string | null
+  refetch: () => void
 }
 
 // Loads a single, discrete page of a manga's chapters. The server holds the full
@@ -52,6 +53,7 @@ export function useChapters(
     totalPages,
     loading: query.isLoading,
     isPlaceholder: query.isPlaceholderData,
-    error: query.error?.message ?? null
+    error: query.error?.message ?? null,
+    refetch: query.refetch
   }
 }

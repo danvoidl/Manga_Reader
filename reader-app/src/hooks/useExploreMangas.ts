@@ -18,6 +18,7 @@ interface UseExploreMangasResult {
   data: MangaCover[]
   loading: boolean
   error: string | null
+  refetch: () => void
 }
 
 // Single data source for the Explore screen: combines the (debounced) title
@@ -40,7 +41,7 @@ export function useExploreMangas({
 
   const order = sorts.map((s) => ({ field: s.sort, direction: s.direction }))
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [
       'exploreMangas',
       debounced,
@@ -65,6 +66,7 @@ export function useExploreMangas({
   return {
     data: data ?? [],
     loading: typing || isLoading,
-    error: error?.message ?? null
+    error: error?.message ?? null,
+    refetch
   }
 }

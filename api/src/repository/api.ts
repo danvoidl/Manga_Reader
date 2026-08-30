@@ -10,7 +10,7 @@ export interface ApiModules {
 // Build a request-scoped set of repository modules whose HTTP client carries the
 // caller's MangaDex access token. Each GraphQL request creates its own instance
 // (see the Apollo `context` in src/index.ts) so upstream calls run under the
-// identity of the logged-in user — the server no longer has an account of its own.
+// identity of the logged-in user.
 export function createModules(token: string): ApiModules {
   const fetchOptions: FetchOptions = {
     baseURL: config.BASE_URL,

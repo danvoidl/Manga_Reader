@@ -1,6 +1,7 @@
-import { View, FlatList, Animated, ActivityIndicator } from "react-native";
+import { View, FlatList, Animated } from "react-native";
 import { useRef, useState } from "react";
 import HomeBanner from "./HomeBanner";
+import { HomeBoardSkeleton } from "@/components/skeletons/MangaSkeletons";
 import { useMangaBanners } from "@/hooks/useMangaBanners";
 
 export default function Board() {
@@ -15,12 +16,10 @@ export default function Board() {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   const slidesRef = useRef(null);
 
-  if (loading || error || data.length === 0) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        {loading && <ActivityIndicator color="#ffffff" />}
-      </View>
-    );
+  if (loading) return <HomeBoardSkeleton />;
+
+  if (error || data.length === 0) {
+    return <View className="flex-1" />;
   }
 
   return (

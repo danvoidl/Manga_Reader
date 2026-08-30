@@ -96,17 +96,12 @@ export const mangaTypeDefs = `#graphql
     mangas: [Manga!]!
     "A single manga by id (with cover_art + author includes)"
     manga(id: ID!): Manga
-    mangasByName(mangaName: String, limit: Int): [Manga!]!
     "Titles filtered by one or more MangaDex tag ids (includedTags[]=), most followed first"
     mangasByTag(includedTags: [ID!]!, limit: Int): [Manga!]!
-    "Most recently uploaded chapters (order[latestUploadedChapter]=desc)"
-    latestUpdates(limit: Int): [Manga!]!
     "Most recently added titles (order[createdAt]=desc)"
     recentlyAdded(limit: Int): [Manga!]!
     "Highest ranked titles (order[highestRanking]=desc)"
     highestRanking(limit: Int): [Manga!]!
-    "Most followed titles (order[followedCount]=desc)"
-    mostPopular(limit: Int): [Manga!]!
     "Recently added titles (last 30 days) ordered by rating desc"
     topRatedRecent(limit: Int): [Manga!]!
     "All available MangaDex categories/tags (genres, themes, formats)"
