@@ -1,3 +1,10 @@
+# [1.2.0-beta.12](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.11...v1.2.0-beta.12) (2026-09-01)
+
+
+### Features
+
+* added skeletons and other minor changes ([34fd462](https://github.com/danvoidl/Manga_Reader/commit/34fd462cca9d4b4a77d36cf471b348b2fd4f9f8f))
+
 # [1.2.0-beta.11](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.10...v1.2.0-beta.11) (2026-08-30)
 
 
