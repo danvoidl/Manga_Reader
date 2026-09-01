@@ -13,7 +13,17 @@ interface LatestChapterItem {
   chapter?: string | null
   title?: string | null
   groupName?: string | null
+  externalUrl?: string | null
   manga: Manga
+}
+
+// True when a chapter is hosted by an official publisher (MangaDex has no
+// at-home pages for it): it carries a non-empty externalUrl to open instead.
+// MangaDex sometimes returns "" for non-external chapters, so require a value.
+export function isExternalChapter(
+  url?: string | null
+): url is string {
+  return typeof url === 'string' && url.length > 0
 }
 
 function firstValue(
@@ -108,7 +118,8 @@ export function toLatestChapterRows(
         group: item.groupName ?? 'Scan desconhecida',
         mangaId: item.manga.id,
         mangaName: pickTitle(item.manga.attributes),
-        cover: item.manga.cover
+        cover: item.manga.cover,
+        externalUrl: item.externalUrl ?? null
       })
     }
 
@@ -128,6 +139,7 @@ export function toChapterRows(items: MangaChapter[]) {
       name: chapter.attributes?.title ?? '',
       scan: scan ?? 'Scan desconhecida',
       lang: chapter.attributes?.translatedLanguage ?? '',
+      externalUrl: chapter.attributes?.externalUrl ?? null,
     }
   })
 }

@@ -1,9 +1,10 @@
-import { ActivityIndicator, useWindowDimensions, View } from 'react-native'
+import { ActivityIndicator, Linking, useWindowDimensions, View } from 'react-native'
 import { Pressable } from 'react-native-gesture-handler'
 import { useRouter } from 'expo-router'
 import AppText from '@/components/AppText'
 import { useAdjacentChapters } from '@/hooks/useAdjacentChapters'
 import { useBackToManga } from '@/hooks/useBackToManga'
+import { isExternalChapter } from '@/utils/manga'
 import type { ChapterRow } from '@/types/manga'
 
 interface Props {
@@ -58,6 +59,12 @@ export function EndOfChapter({ mangaId, mangaName, chapterId }: Props) {
   const { next, prev, loading } = useAdjacentChapters(mangaId, chapterId)
 
   function goToChapter(chapter: ChapterRow) {
+    // Official-publisher chapters open on the publisher's site, not the reader.
+    if (isExternalChapter(chapter.externalUrl)) {
+      Linking.openURL(chapter.externalUrl)
+      return
+    }
+
     const label = chapter.number ? `Cap. ${chapter.number}` : 'Oneshot'
 
     router.replace({
@@ -90,7 +97,11 @@ export function EndOfChapter({ mangaId, mangaName, chapterId }: Props) {
         <View className="w-full max-w-xs gap-3">
           {next ? (
             <ActionButton
-              title={`Próximo capítulo${next.number ? ` — Cap. ${next.number}` : ''}`}
+              title={`${
+                isExternalChapter(next.externalUrl)
+                  ? 'Próximo (site oficial)'
+                  : 'Próximo capítulo'
+              }${next.number ? ` — Cap. ${next.number}` : ''}`}
               onPress={() => goToChapter(next)}
             />
           ) : (
@@ -103,7 +114,11 @@ export function EndOfChapter({ mangaId, mangaName, chapterId }: Props) {
 
           {prev ? (
             <ActionButton
-              title="Capítulo anterior"
+              title={
+                isExternalChapter(prev.externalUrl)
+                  ? 'Anterior (site oficial)'
+                  : 'Capítulo anterior'
+              }
               variant="ghost"
               onPress={() => goToChapter(prev)}
             />

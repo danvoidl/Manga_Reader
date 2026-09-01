@@ -97,6 +97,18 @@ export const mangaChaptersResolver = {
       return data
     },
 
+    chapter: async (
+      parent: unknown,
+      args: { id: string },
+      context: GraphQLContext
+    ) => {
+      const [error, resp] = await repo(context).getChapterById(args.id)
+
+      if (error) return null
+
+      return resp.data
+    },
+
     // Global "Latest Updates" feed: one card per chapter (not deduped), each
     // carrying its manga. The chapter's manga relationship has no cover, so we
     // batch-fetch the manga by id (with cover_art) and attach the real node —
@@ -136,6 +148,7 @@ export const mangaChaptersResolver = {
           title: string
           translatedLanguage: string
           groupName: string | null
+          externalUrl: string | null
           manga: Manga
         }[]
       >((acc, chapter) => {
@@ -154,6 +167,7 @@ export const mangaChaptersResolver = {
           translatedLanguage: chapter.attributes.translatedLanguage,
           groupName:
             (group?.attributes as { name?: string } | undefined)?.name ?? null,
+          externalUrl: chapter.attributes.externalUrl ?? null,
           manga
         })
 

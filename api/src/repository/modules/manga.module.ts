@@ -117,6 +117,20 @@ class PostModule extends FetchFactory<any> {
     })
   }
 
+  // Single chapter by id (with scanlation_group) — used to resolve a chapter's
+  // externalUrl for chapters hosted by an official publisher (no at-home pages).
+  async getChapterById(id: string): Promise<ApiResp<{ data: Chapter }>> {
+    return this.call({
+      method: 'GET',
+      url: `/chapter/${id}`,
+      fetchOptions: {
+        query: {
+          'includes[]': 'scanlation_group'
+        }
+      }
+    })
+  }
+
   async getMangaChapterImgs(
     chapterId: string
   ): Promise<ApiResp<GetChapterImgs>> {

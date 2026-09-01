@@ -1,39 +1,54 @@
-import { FlatList, Pressable, View } from 'react-native'
+import { FlatList, Linking, Pressable, View } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
+import Icon from '@react-native-vector-icons/material-design-icons'
 import AppText from '@/components/AppText'
 import ErrorState from '@/components/ui/ErrorState'
 import { LatestChapterRowSkeleton } from '@/components/skeletons/MangaSkeletons'
 import { useLatestChapters } from '@/hooks/useLatestChapters'
+import { isExternalChapter } from '@/utils/manga'
 import type { LatestChapterRow } from '@/types/manga'
 
 function LatestChapterCard({ row }: { row: LatestChapterRow }) {
   const router = useRouter()
   const label = row.number ? `Cap. ${row.number}` : 'Oneshot'
+  const external = isExternalChapter(row.externalUrl)
+
+  function open() {
+    // Official-publisher chapters open on the publisher's site, not the reader.
+    if (isExternalChapter(row.externalUrl)) {
+      Linking.openURL(row.externalUrl)
+      return
+    }
+
+    router.push({
+      pathname: '/manga/chapter/[id]',
+      params: {
+        id: row.chapterId,
+        title: label,
+        subtitle: row.title,
+        mangaId: row.mangaId,
+        mangaName: row.mangaName,
+        chapterNumber: row.number
+      }
+    })
+  }
 
   return (
-    <Pressable
-      style={{ width: 128 }}
-      onPress={() =>
-        router.push({
-          pathname: '/manga/chapter/[id]',
-          params: {
-            id: row.chapterId,
-            title: label,
-            subtitle: row.title,
-            mangaId: row.mangaId,
-            mangaName: row.mangaName,
-            chapterNumber: row.number
-          }
-        })
-      }
-    >
-      <Image
-        source={row.cover}
-        style={{ width: '100%', aspectRatio: 200 / 294, borderRadius: 6 }}
-        contentFit="cover"
-        transition={300}
-      />
+    <Pressable style={{ width: 128 }} onPress={open}>
+      <View>
+        <Image
+          source={row.cover}
+          style={{ width: '100%', aspectRatio: 200 / 294, borderRadius: 6 }}
+          contentFit="cover"
+          transition={300}
+        />
+        {external && (
+          <View className="absolute right-1.5 top-1.5 rounded-full bg-black/70 p-1">
+            <Icon name="open-in-new" size={14} color="#ffffff" />
+          </View>
+        )}
+      </View>
 
       <AppText
         text={row.mangaName}

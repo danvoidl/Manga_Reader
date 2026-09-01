@@ -27,6 +27,7 @@ export interface ChapterRow {
   name: string;
   scan: string;
   lang: string;
+  externalUrl?: string | null;
 }
 
 // A card in the home "Últimos capítulos adicionados" carousel: manga cover +
@@ -39,6 +40,7 @@ export interface LatestChapterRow {
   mangaId: string;
   mangaName: string;
   cover: string;
+  externalUrl?: string | null;
 }
 
 // ---- GraphQL response shapes ----------------------------------------------

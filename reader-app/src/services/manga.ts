@@ -126,6 +126,7 @@ export const CHAPTERS_QUERY = graphql(`
           chapter
           title
           translatedLanguage
+          externalUrl
         }
         relationships {
           type
@@ -146,6 +147,21 @@ export const CHAPTER_IMGS_QUERY = graphql(`
   }
 `)
 
+// A single chapter by id — the reader uses this to detect official-publisher
+// chapters (externalUrl set, no at-home pages) and route to the external link.
+export const CHAPTER_QUERY = graphql(`
+  query Chapter($id: ID!) {
+    chapter(id: $id) {
+      id
+      attributes {
+        chapter
+        title
+        externalUrl
+      }
+    }
+  }
+`)
+
 // Home "Últimos capítulos adicionados" — global latest chapter uploads, each
 // with its manga (CardFields) so we get the cover + title for the card.
 export const LATEST_CHAPTERS_QUERY = graphql(`
@@ -155,6 +171,7 @@ export const LATEST_CHAPTERS_QUERY = graphql(`
       chapter
       title
       groupName
+      externalUrl
       manga {
         ...CardFields
       }
@@ -182,6 +199,7 @@ export const CHAPTER = graphql(`
       chapter
       title
       translatedLanguage
+      externalUrl
     }
     relationships {
       type
