@@ -31,12 +31,6 @@ jobs:
         with:
           bun-version: latest
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-          cache: gradle
-
       - name: Instalar dependências (bun)
         run: bun install --frozen-lockfile
 
@@ -45,6 +39,16 @@ jobs:
 
       - name: Prebuild (gerar android/)
         run: bunx expo prebuild --platform android --no-install
+
+      # Depois do prebuild: a pasta android/ (e os arquivos *.gradle) já existem,
+      # então o cache do Gradle encontra o que hashear. Antes daqui falhava com
+      # "No file matched to [**/*.gradle*, ...]".
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+          cache-dependency-path: reader-app/android/**/*.gradle*
 
       - name: Build APK release (Gradle)
         working-directory: reader-app/android
