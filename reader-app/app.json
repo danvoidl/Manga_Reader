@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Hokusai Manga",
-    "slug": "hokusai-manga",
+    "slug": "reader-app",
     "scheme": "expo-starter",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -44,7 +44,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#262626"
         }
-      ]
+      ],
+      "./plugins/withReleaseSigning"
     ],
     "experiments": {
       "typedRoutes": true
