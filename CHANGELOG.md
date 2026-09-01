@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0...v1.2.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* mover setup-java para depois do prebuild no build Android ([d114b68](https://github.com/danvoidl/Manga_Reader/commit/d114b684ff8d4b258e7705ab01718521d80a946a))
+
 # [1.2.0](https://github.com/danvoidl/Manga_Reader/compare/v1.1.0...v1.2.0) (2026-09-01)
 
 
