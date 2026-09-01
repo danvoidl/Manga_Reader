@@ -1,3 +1,10 @@
+# [1.2.0-beta.13](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.12...v1.2.0-beta.13) (2026-09-01)
+
+
+### Features
+
+* build de APK Android via GitHub Actions (workflow manual + assinatura) ([f07b161](https://github.com/danvoidl/Manga_Reader/commit/f07b1616213d1dbd4de4cbc64677fdf9058897f2))
+
 # [1.2.0-beta.12](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0-beta.11...v1.2.0-beta.12) (2026-09-01)
 
 
