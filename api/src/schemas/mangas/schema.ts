@@ -1,9 +1,11 @@
-export const typeDefs = `#graphql 
+export const mangaTypeDefs = `#graphql 
   type Manga {
     id: ID!
     type: String
     attributes: MangaAttributes
-    relationships: [Relationship!]!
+    relationships: [MangaRelationship!]!
+    "Full MangaDex cover URL, built server-side from the cover_art relationship. size = thumbnail width (256/512) or 0 for the original."
+    coverUrl(size: Int = 512): String
   }
 
   type MangaAttributes {
@@ -56,24 +58,24 @@ export const typeDefs = `#graphql
     id: ID!
     type: String
     attributes: TagAttributes
-    relationships: [Relationship]
+    relationships: [MangaRelationship]
   }
 
   type TagAttributes {
     name: LocalizedString
-    description: String
+    description: LocalizedString
     group: String
     version: Int
   }
 
-  type Relationship {
+  type MangaRelationship {
     id: ID!
     type: String
     related: String
-    attributes: RelationshipAttributes
+    attributes: MangaRelationshipAttributes
   }
 
-  type RelationshipAttributes {
+  type MangaRelationshipAttributes {
     description: String
     volume: String
     fileName: String
@@ -83,7 +85,33 @@ export const typeDefs = `#graphql
     version: Int
   }
 
+  input MangaOrderInput {
+    "MangaDex order[] field, e.g. rating, followedCount, year, title, relevance"
+    field: String!
+    "asc | desc (defaults to desc)"
+    direction: String
+  }
+
   type Query {
     mangas: [Manga!]!
+    "A single manga by id (with cover_art + author includes)"
+    manga(id: ID!): Manga
+    "Titles filtered by one or more MangaDex tag ids (includedTags[]=), most followed first"
+    mangasByTag(includedTags: [ID!]!, limit: Int): [Manga!]!
+    "Most recently added titles (order[createdAt]=desc)"
+    recentlyAdded(limit: Int): [Manga!]!
+    "Highest ranked titles (order[highestRanking]=desc)"
+    highestRanking(limit: Int): [Manga!]!
+    "Recently added titles (last 30 days) ordered by rating desc"
+    topRatedRecent(limit: Int): [Manga!]!
+    "All available MangaDex categories/tags (genres, themes, formats)"
+    categories: [Tag!]!
+    "Explore search: optional title + multiple sort criteria + included tag ids, all combined"
+    exploreMangas(
+      title: String
+      order: [MangaOrderInput!]
+      includedTags: [ID!]
+      limit: Int
+    ): [Manga!]!
   }
 `

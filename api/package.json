@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "mangadex-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/index.ts",
-    "start": "npm run compile && node ./dist/index.js"
+    "start": "tsx src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,15 +16,16 @@
   "devDependencies": {
     "@types/node": "^22.15.21",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@apollo/server": "^4.12.1",
+    "@graphql-tools/schema": "^10.0.23",
     "dotenv": "^16.5.0",
     "graphql": "^16.11.0",
     "node-cache": "^5.1.2",
-    "ofetch": "^1.4.1"
+    "ofetch": "^1.4.1",
+    "tsx": "^4.19.4"
   },
   "graphql": {
     "schema": "https://localhost:4000/graphql",

@@ -1,0 +1,2 @@
+schema: https://mangadexreader-api.onrender.com
+documents: src/**/*.{ts,tsx}

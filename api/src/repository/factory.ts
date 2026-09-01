@@ -48,7 +48,7 @@ class FetchFactory<T> {
       return [
         {
           statusCode: 503,
-          message: (fetchError?.cause as Error)?.message,
+          message: (fetchError as Error)?.message,
           details: '',
           errors: []
         }

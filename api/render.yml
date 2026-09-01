@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: mangadexreader-api
+    runtime: node
+    rootDir: api
+    plan: free
+    buildCommand: npm install && npm run compile
+    startCommand: node ./dist/index.js
+    envVars:
+      - key: BASE_URL
+        sync: false
+      - key: AUTH_BASE_URL
+        sync: false
+      - key: UPLOAD_BASE_URL
+        sync: false
+      - key: MD_USERNAME
+        sync: false
+      - key: MD_PASSWORD
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: CLIENT_SECRET
+        sync: false
+      - key: GRANT_TYPE
+        sync: false
