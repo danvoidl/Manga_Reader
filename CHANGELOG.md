@@ -1,3 +1,10 @@
+# [1.3.0-beta.1](https://github.com/danvoidl/Manga_Reader/compare/v1.2.1...v1.3.0-beta.1) (2026-09-02)
+
+
+### Features
+
+* **api:** backend de sync em Postgres + limpeza e padronização de JSDoc ([5851fe9](https://github.com/danvoidl/Manga_Reader/commit/5851fe9835e39c90b7bf0923885db35ea85bcd6b))
+
 ## [1.2.1](https://github.com/danvoidl/Manga_Reader/compare/v1.2.0...v1.2.1) (2026-09-01)
 
 
